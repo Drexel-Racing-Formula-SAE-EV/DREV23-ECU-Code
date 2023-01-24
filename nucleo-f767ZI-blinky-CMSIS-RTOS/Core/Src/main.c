@@ -60,6 +60,8 @@ ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDecr
 
 ETH_TxPacketConfig TxConfig;
 
+CAN_HandleTypeDef hcan1;
+
 ETH_HandleTypeDef heth;
 
 UART_HandleTypeDef huart3;
@@ -81,7 +83,9 @@ const osThreadAttr_t blink02_attributes = {
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
 /* USER CODE BEGIN PV */
-
+CAN_TxHeaderTypeDef TxHeader;
+uint8_t TxData[8] = { 0x90, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint32_t TxMailbox;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,6 +94,7 @@ static void MX_GPIO_Init(void);
 static void MX_ETH_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
+static void MX_CAN1_Init(void);
 void StartBlink01(void *argument);
 void StartBlink02(void *argument);
 
@@ -133,6 +138,7 @@ int main(void)
   MX_ETH_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -241,6 +247,50 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief CAN1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CAN1_Init(void)
+{
+
+  /* USER CODE BEGIN CAN1_Init 0 */
+
+  /* USER CODE END CAN1_Init 0 */
+
+  /* USER CODE BEGIN CAN1_Init 1 */
+
+  /* USER CODE END CAN1_Init 1 */
+  hcan1.Instance = CAN1;
+  hcan1.Init.Prescaler = 32;
+  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeTriggeredMode = DISABLE;
+  hcan1.Init.AutoBusOff = DISABLE;
+  hcan1.Init.AutoWakeUp = DISABLE;
+  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.ReceiveFifoLocked = DISABLE;
+  hcan1.Init.TransmitFifoPriority = DISABLE;
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CAN1_Init 2 */
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.StdId = 0x446;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.DLC = 8;
+
+	if(HAL_CAN_Start(&hcan1) != HAL_OK){
+	   Error_Handler();
+	}
+  /* USER CODE END CAN1_Init 2 */
+
 }
 
 /**
@@ -430,7 +480,10 @@ void StartBlink01(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+
+	  if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox) == CAN_TXSTATUS_OK) {
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+	  }
 	  osDelay(500);
   }
 
@@ -453,13 +506,9 @@ void StartBlink02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-	  osDelay(600);
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+	  osDelay(250);
   }
-
-  //In case the thread is ever terminated (exited from task loop), which should be never
-  osThreadTerminate(NULL);
-
   /* USER CODE END StartBlink02 */
 }
 

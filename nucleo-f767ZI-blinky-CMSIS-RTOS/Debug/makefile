@@ -64,8 +64,8 @@ all: main-build
 main-build: nucleo-f767ZI-blinky-CMSIS-RTOS.elf secondary-outputs
 
 # Tool invocations
-nucleo-f767ZI-blinky-CMSIS-RTOS.elf nucleo-f767ZI-blinky-CMSIS-RTOS.map: $(OBJS) $(USER_OBJS) C:\Users\Benedict\STM32CubeIDE\workspace_1.11.0\nucleo-f767ZI-blinky-CMSIS-RTOS\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "nucleo-f767ZI-blinky-CMSIS-RTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\Benedict\STM32CubeIDE\workspace_1.11.0\nucleo-f767ZI-blinky-CMSIS-RTOS\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nucleo-f767ZI-blinky-CMSIS-RTOS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+nucleo-f767ZI-blinky-CMSIS-RTOS.elf nucleo-f767ZI-blinky-CMSIS-RTOS.map: $(OBJS) $(USER_OBJS) /Users/colebardin/Projects/DREV23-ECU-Code/nucleo-f767ZI-blinky-CMSIS-RTOS/STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "nucleo-f767ZI-blinky-CMSIS-RTOS.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/Users/colebardin/Projects/DREV23-ECU-Code/nucleo-f767ZI-blinky-CMSIS-RTOS/STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="nucleo-f767ZI-blinky-CMSIS-RTOS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
