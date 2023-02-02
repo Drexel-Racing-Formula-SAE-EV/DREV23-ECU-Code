@@ -4,6 +4,9 @@
 #metadata
 .metadata/
 
+#DS Store
+.DS_Store
+
 #Debug
 Debug/
 debug/
