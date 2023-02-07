@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,9 +36,9 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define SEND			(0)
-#define CANBUS_ID_0		(0x90)
-#define CANBUS_ID_1		(0x91)
+#define SEND			(1)
+#define CANBUS_ID_0		(0x02)
+#define CANBUS_ID_1		(0x01)
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -79,7 +80,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	HAL_StatusTypeDef status;
-	uint32_t ret;
+	//uint32_t ret;
 	char msg[64];
   /* USER CODE END 1 */
 
@@ -122,18 +123,19 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
-	  ret = HAL_CAN_GetTxMailboxesFreeLevel(&hcan1);
+	  while(HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) != 3);
+	  //ret = HAL_CAN_GetTxMailboxesFreeLevel(&hcan1);
 	  sprintf(msg, "status: 0x%x\r\n", status);
 	  HAL_UART_Transmit(&huart3, (uint8_t *)msg, strlen(msg), 1000);
-	  sprintf(msg, "mailbox ret: %ld\r\n", ret);
-	  HAL_UART_Transmit(&huart3, (uint8_t *)msg, strlen(msg), 1000);
+	  //sprintf(msg, "mailbox ret: %ld\r\n", ret);
+	  //HAL_UART_Transmit(&huart3, (uint8_t *)msg, strlen(msg), 1000);
 	  sprintf(msg, "hcan error: 0x%lx\r\n\n", hcan1.ErrorCode);
 	  HAL_UART_Transmit(&huart3, (uint8_t *)msg, strlen(msg), 1000);
 	  if (status == HAL_OK ) {
 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 	  }
-	  HAL_Delay(500);
 	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+	  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }
@@ -217,9 +219,9 @@ static void MX_CAN1_Init(void)
   hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
-  hcan1.Init.AutoBusOff = DISABLE;
-  hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoBusOff = ENABLE;
+  hcan1.Init.AutoWakeUp = ENABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
@@ -227,13 +229,12 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  /* USER CODE BEGIN CAN1_Init 2 */
   TxHeader.DLC = 8; // Number of bites to be transmitted max- 8
   TxHeader.IDE = CAN_ID_STD;
+  TxHeader.ExtId = 0;
   TxHeader.RTR = CAN_RTR_DATA;
   if (SEND) TxHeader.StdId = CANBUS_ID_1;
   else TxHeader.StdId = CANBUS_ID_0;
-  TxHeader.ExtId = 0x02;
   TxHeader.TransmitGlobalTime = DISABLE;
 
   canfil.FilterBank = 0;
@@ -247,10 +248,10 @@ static void MX_CAN1_Init(void)
   canfil.FilterActivation = ENABLE;
   canfil.SlaveStartFilterBank = 14;
 
-   HAL_CAN_ConfigFilter(&hcan1,&canfil); //Initialize CAN Filter
+  HAL_CAN_ConfigFilter(&hcan1,&canfil); //Initialize CAN Filter
 
   HAL_CAN_Start(&hcan1);
-  HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);// Initialize CAN Bus Rx Interrupt
+  //HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);// Initialize CAN Bus Rx Interrupt
   /* USER CODE END CAN1_Init 2 */
 
 }

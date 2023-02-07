@@ -258,7 +258,7 @@ static void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
-
+	CAN_FilterTypeDef  sFilterConfig;
   /* USER CODE END CAN1_Init 0 */
 
   /* USER CODE BEGIN CAN1_Init 1 */
@@ -267,13 +267,13 @@ static void MX_CAN1_Init(void)
   hcan1.Instance = CAN1;
   hcan1.Init.Prescaler = 32;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
-  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_2TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
   hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.AutoRetransmission = ENABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
   if (HAL_CAN_Init(&hcan1) != HAL_OK)
@@ -281,14 +281,34 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-	TxHeader.IDE = CAN_ID_STD;
-	TxHeader.StdId = 0x446;
-	TxHeader.RTR = CAN_RTR_DATA;
-	TxHeader.DLC = 8;
 
-	if(HAL_CAN_Start(&hcan1) != HAL_OK){
-	   Error_Handler();
+  sFilterConfig.FilterBank = 0;
+  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+  sFilterConfig.FilterIdHigh = 0x0000;
+  sFilterConfig.FilterIdLow = 0x0000;
+  sFilterConfig.FilterMaskIdHigh = 0x0000;
+  sFilterConfig.FilterMaskIdLow = 0x0000;
+  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+  sFilterConfig.FilterActivation = ENABLE;
+  sFilterConfig.SlaveStartFilterBank = 14;
+
+  if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK)
+  {
+    /* Filter configuration Error */
+    Error_Handler();
+  }
+
+	if (HAL_CAN_Start(&hcan1) != HAL_OK) {
+		Error_Handler();
 	}
+
+	TxHeader.StdId = 0x321;
+	TxHeader.ExtId = 0x01;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.DLC = 8;
+	TxHeader.TransmitGlobalTime = DISABLE;
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -480,13 +500,13 @@ void StartBlink01(void *argument)
   /* Infinite loop */
   for(;;)
   {
-
-	  if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox) == CAN_TXSTATUS_OK) {
+	  HAL_StatusTypeDef status = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
+	  //while (HAL_CAN_GetTxMailboxesFreeLevel(&hcan1) != 3);
+	  if (status == CAN_TXSTATUS_OK ) {
 		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 	  }
 	  osDelay(500);
   }
-
   //In case the thread is ever terminated (exited from task loop), which should be never
   osThreadTerminate(NULL);
 
@@ -507,7 +527,7 @@ void StartBlink02(void *argument)
   for(;;)
   {
 	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-	  osDelay(250);
+	  osDelay(500);
   }
   /* USER CODE END StartBlink02 */
 }
