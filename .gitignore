@@ -4,6 +4,9 @@
 #metadata
 .metadata/
 
+#stupid mac shit
+.DS_Store
+
 #Debug
 Debug/
 debug/
