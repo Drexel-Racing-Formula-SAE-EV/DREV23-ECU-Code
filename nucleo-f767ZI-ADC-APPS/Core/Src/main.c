@@ -37,27 +37,33 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define BAMOCAR_CANBUS_ID 0x271 // TODO: Verify
+#define ECU_CANBUS_ID 0x10 // TODO: approve
+#define TORQUE_REG 0x90 // TODO: Verify
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+CAN_HandleTypeDef hcan1;
+
 UART_HandleTypeDef huart3;
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for APPS */
+osThreadId_t APPSHandle;
+const osThreadAttr_t APPS_attributes = {
+  .name = "APPS",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
-//CAN_TxHeaderTypeDef TxHeader;
-//uint8_t TxData[8] = { 0x90, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00 };
-//uint32_t TxMailbox;
+CAN_RxHeaderTypeDef rxHeader; //CAN Bus Transmit Header
+CAN_TxHeaderTypeDef TxHeader;
+uint32_t TxMailbox;
+uint8_t TxData[8] = {0x00};
+uint8_t canRX[8] = {0};  //CAN Bus Receive Buffer
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -66,10 +72,12 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_ADC1_Init(void);
-void StartDefaultTask(void *argument);
+static void MX_CAN1_Init(void);
+void process_throttle(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+uint16_t percent_to_trq_hex(short percent);
+long map(long x, long in_min, long in_max, long out_min, long out_max);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -108,6 +116,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_ADC1_Init();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -132,8 +141,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of APPS */
+  APPSHandle = osThreadNew(process_throttle, NULL, &APPS_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -277,6 +286,66 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief CAN1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CAN1_Init(void)
+{
+
+  /* USER CODE BEGIN CAN1_Init 0 */
+	CAN_FilterTypeDef canfil; //CAN Bus Filter
+  /* USER CODE END CAN1_Init 0 */
+
+  /* USER CODE BEGIN CAN1_Init 1 */
+
+  /* USER CODE END CAN1_Init 1 */
+  hcan1.Instance = CAN1;
+  hcan1.Init.Prescaler = 12;
+  hcan1.Init.Mode = CAN_MODE_NORMAL;
+  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_6TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
+  hcan1.Init.TimeTriggeredMode = DISABLE;
+  hcan1.Init.AutoBusOff = ENABLE;
+  hcan1.Init.AutoWakeUp = ENABLE;
+  hcan1.Init.AutoRetransmission = DISABLE;
+  hcan1.Init.ReceiveFifoLocked = DISABLE;
+  hcan1.Init.TransmitFifoPriority = DISABLE;
+  if (HAL_CAN_Init(&hcan1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CAN1_Init 2 */
+  TxHeader.DLC = 8; // Number of bites to be transmitted max- 8
+  TxHeader.IDE = CAN_ID_STD;
+  TxHeader.ExtId = 0;
+  TxHeader.RTR = CAN_RTR_DATA;
+  TxHeader.StdId = ECU_CANBUS_ID;
+  TxHeader.TransmitGlobalTime = DISABLE;
+
+
+  canfil.FilterBank = 0;
+  canfil.FilterMode = CAN_FILTERMODE_IDMASK;
+  canfil.FilterFIFOAssignment = CAN_RX_FIFO0;
+  canfil.FilterIdHigh = 0;
+  canfil.FilterIdLow = 0;
+  canfil.FilterMaskIdHigh = 0;
+  canfil.FilterMaskIdLow = 0;
+  canfil.FilterScale = CAN_FILTERSCALE_32BIT;
+  canfil.FilterActivation = ENABLE;
+  canfil.SlaveStartFilterBank = 14;
+
+  HAL_CAN_ConfigFilter(&hcan1,&canfil); //Initialize CAN Filter
+
+  if (HAL_CAN_Start(&hcan1) != HAL_OK) {
+	  Error_Handler();
+  }
+  /* USER CODE END CAN1_Init 2 */
+
+}
+
+/**
   * @brief USART3 Initialization Function
   * @param None
   * @retval None
@@ -398,21 +467,43 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+uint16_t percent_to_trq_hex(short percent){
+    return (uint16_t)map(percent, 0, 100, 0x0000, 0x5555);
+}
 
+// Parsed from Arduino's Wiring.h
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+	long in_range = in_max - in_min;
+	long out_range = out_max - out_min;
+	if (in_range == 0) return out_min + out_range / 2;
+	long num = (x - in_min) * out_range;
+	if (out_range >= 0) {
+		num += in_range / 2;
+	} else {
+		num -= in_range / 2;
+	}
+	long result = num / in_range + out_min;
+	if (out_range >= 0) {
+		if (in_range * num < 0) return result - 1;
+	} else {
+		if (in_range * num >= 0) return result + 1;
+	}
+	return result;
+}
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_process_throttle */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the APPS thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_process_throttle */
+void process_throttle(void *argument)
 {
   /* USER CODE BEGIN 5 */
 	uint16_t raw;
-	char msg[10];
+	char msg[32];
   /* Infinite loop */
   for(;;)
   {
