@@ -39,6 +39,10 @@
 #define SEND			(1)
 #define CANBUS_ID_0		(0x02)
 #define CANBUS_ID_1		(0x01)
+
+#define BAMOCAR_CANBUS_ID 0x201 // TODO: Verify
+#define ECU_CANBUS_ID 0x10 // TODO: approve
+#define TORQUE_REG 0x90 // TODO: Verify
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -49,10 +53,13 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
+
+
 CAN_RxHeaderTypeDef rxHeader; //CAN Bus Transmit Header
 CAN_TxHeaderTypeDef TxHeader;
 uint32_t TxMailbox;
-uint8_t TxData[8] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+//uint8_t TxData[8] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+uint8_t TxData[3] = {TORQUE_REG ,0xAB, 0x2A};
 uint8_t canRX[8] = {0,0,0,0,0,0,0,0};  //CAN Bus Receive Buffer
 char msg[] = "MESSAGE RECEIVED!\n";
 /* USER CODE END PV */
@@ -63,7 +70,6 @@ static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_CAN1_Init(void);
-static void CAN_Config(void);
 /* USER CODE BEGIN PFP */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
 /* USER CODE END PFP */
@@ -105,8 +111,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
-  //MX_CAN1_Init();
-  CAN_Config();
+  MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -220,79 +225,6 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void CAN_Config(void)
-{
-  CAN_FilterTypeDef  sFilterConfig;
-
-  /*##-1- Configure the CAN peripheral #######################################*/
-  hcan1.Instance = CAN1;
-
-  hcan1.Init.TimeTriggeredMode = DISABLE;
-  hcan1.Init.AutoBusOff = DISABLE;
-  hcan1.Init.AutoWakeUp = DISABLE;
-  hcan1.Init.AutoRetransmission = ENABLE;
-  hcan1.Init.ReceiveFifoLocked = DISABLE;
-  hcan1.Init.TransmitFifoPriority = DISABLE;
-  hcan1.Init.Mode = CAN_MODE_NORMAL;
-  hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_6TQ; //CAN_BS1_4TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_1TQ; //CAN_BS2_2TQ;
-  hcan1.Init.Prescaler = 12;//32;
-
-  if (HAL_CAN_Init(&hcan1) != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
-
-  /*##-2- Configure the CAN Filter ###########################################*/
-  sFilterConfig.FilterBank = 0;
-  sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-  sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-  sFilterConfig.FilterIdHigh = 0x0000;
-  sFilterConfig.FilterIdLow = 0x0000;
-  sFilterConfig.FilterMaskIdHigh = 0x0000;
-  sFilterConfig.FilterMaskIdLow = 0x0000;
-  sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
-  sFilterConfig.FilterActivation = DISABLE; //Was enable when working, now disable
-  sFilterConfig.SlaveStartFilterBank = 14;
-
-  if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK)
-  {
-    /* Filter configuration Error */
-    Error_Handler();
-  }
-
-  /*##-3- Start the CAN peripheral ###########################################*/
-  if (HAL_CAN_Start(&hcan1) != HAL_OK)
-  {
-    /* Start Error */
-    Error_Handler();
-  }
-
-  /*##-4- Activate CAN RX notification #######################################*/
-  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
-  {
-    /* Notification Error */
-    Error_Handler();
-  }
-
-  /*##-5- Configure Transmission process #####################################*/
-  TxHeader.StdId = 0x321;
-  TxHeader.ExtId = 0x00;
-  TxHeader.RTR = CAN_RTR_DATA;
-  TxHeader.IDE = CAN_ID_STD;
-  TxHeader.DLC = 8;
-  TxHeader.TransmitGlobalTime = DISABLE;
-}
-
-/**
-  * @brief  Rx Fifo 0 message pending callback
-  * @param  hcan: pointer to a CAN_HandleTypeDef structure that contains
-  *         the configuration information for the specified CAN.
-  * @retval None
-  */
-
 static void MX_CAN1_Init(void)
 {
 
@@ -304,10 +236,10 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 32;
+  hcan1.Init.Prescaler = 12;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_1TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_6TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_1TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = ENABLE;
@@ -320,7 +252,7 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-  TxHeader.DLC = 8; // Number of bites to be transmitted max- 8
+  TxHeader.DLC = 3; // Number of bites to be transmitted max- 8
   TxHeader.IDE = CAN_ID_STD;
   TxHeader.ExtId = 0;
   TxHeader.RTR = CAN_RTR_DATA;
@@ -328,7 +260,8 @@ static void MX_CAN1_Init(void)
   /*if (SEND) TxHeader.StdId = CANBUS_ID_1;
   else TxHeader.StdId = CANBUS_ID_0;
   */
-  TxHeader.StdId = 0x123;
+  //TxHeader.StdId = 0x123;
+  TxHeader.StdId = BAMOCAR_CANBUS_ID; //0x201
   TxHeader.TransmitGlobalTime = DISABLE;
 
   canfil.FilterBank = 0;
