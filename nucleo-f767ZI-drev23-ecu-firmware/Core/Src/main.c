@@ -57,9 +57,9 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
-//CAN_TxHeaderTypeDef TxHeader;
-//uint8_t TxData[8] = { 0x90, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00 };
-//uint32_t TxMailbox;
+CAN_TxHeaderTypeDef TxHeader;
+uint8_t TxData[8] = { 0x90, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00 };
+uint32_t TxMailbox;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,37 +72,16 @@ static void MX_CAN1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
+uint16_t percent_to_torque_hex(short percent);
+long map(long x, long in_min, long in_max, long out_min, long out_max);
 
+void ADC1_SELECT_CH3(void);
+void ADC1_SELECT_CH10(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void ADC1_SELECT_CH3(void){
-	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-	  */
-	  sConfig.Channel = ADC_CHANNEL_3;
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
-}
 
-void ADC1_SELECT_CH10(void){
-	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
-	  */
-	  sConfig.Channel = ADC_CHANNEL_10;
-	  sConfig.Rank = ADC_REGULAR_RANK_1; //TODO: Figure out why the rank needs to be set to Rank 1 in order for that specific channel to be selected
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
-}
 /* USER CODE END 0 */
 
 /**
@@ -337,7 +316,9 @@ static void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
-
+  if (HAL_CAN_Start(&hcan1) != HAL_OK){
+	  Error_Handler();
+  }
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -464,7 +445,56 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+uint16_t percent_to_trq_hex(short percent){
+    return map(percent, 0, 100, 0x0000, 0x5555);
+}
 
+// Parsed from Arduino's Wiring.h
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+	long in_range = in_max - in_min;
+	long out_range = out_max - out_min;
+	if (in_range == 0) return out_min + out_range / 2;
+	long num = (x - in_min) * out_range;
+	if (out_range >= 0) {
+		num += in_range / 2;
+	} else {
+		num -= in_range / 2;
+	}
+	long result = num / in_range + out_min;
+	if (out_range >= 0) {
+		if (in_range * num < 0) return result - 1;
+	} else {
+		if (in_range * num >= 0) return result + 1;
+	}
+	return result;
+}
+
+void ADC1_SELECT_CH3(void){
+	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
+	  ADC_ChannelConfTypeDef sConfig = {0};
+	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+	  */
+	  sConfig.Channel = ADC_CHANNEL_3;
+	  sConfig.Rank = ADC_REGULAR_RANK_1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+}
+
+void ADC1_SELECT_CH10(void){
+	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
+	  ADC_ChannelConfTypeDef sConfig = {0};
+	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+	  */
+	  sConfig.Channel = ADC_CHANNEL_10;
+	  sConfig.Rank = ADC_REGULAR_RANK_1; //TODO: Figure out why the rank needs to be set to Rank 1 in order for that specific channel to be selected
+	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+}
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
