@@ -74,7 +74,32 @@ void StartDefaultTask(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void ADC1_SELECT_CH3(void){
+	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
+	  ADC_ChannelConfTypeDef sConfig = {0};
+	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+	  */
+	  sConfig.Channel = ADC_CHANNEL_3;
+	  sConfig.Rank = ADC_REGULAR_RANK_1;
+	  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+}
 
+void ADC1_SELECT_CH10(void){
+	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
+	  ADC_ChannelConfTypeDef sConfig = {0};
+	  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+	  */
+	  sConfig.Channel = ADC_CHANNEL_10;
+	  sConfig.Rank = ADC_REGULAR_RANK_1; //TODO: Figure out why the rank needs to be set to Rank 1 in order for that specific channel to be selected
+	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	  {
+	    Error_Handler();
+	  }
+}
 /* USER CODE END 0 */
 
 /**
@@ -411,8 +436,8 @@ static void MX_GPIO_Init(void)
 void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-	uint16_t raw;
-	char msg[10];
+	char msg[64];
+	uint16_t rawADCval[2];
   /* Infinite loop */
   for(;;)
   {
@@ -420,36 +445,35 @@ void StartDefaultTask(void *argument)
 	  //What one can do to test the Timing of the ADC is pull a pin high here and measure it wit the Oscilloscope
 	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 
-	  //Get ADC Value
+	  //Get ADC Value from Channel 3
+	  ADC1_SELECT_CH3();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	  raw = HAL_ADC_GetValue(&hadc1);
+	  rawADCval[0] = HAL_ADC_GetValue(&hadc1);
 
 	  //Set GPIO pin low for ADC timing on Oscilloscope
 	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
 
-	  //Convert string and send message over UART to PC console
-	  sprintf(msg,"%hu\r\n", raw);
-	  HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-
 	  //#############################APPS 2#####################################
 //	  //What one can do to test the Timing of the ADC is pull a pin high here and measure it wit the Oscilloscope
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-//
-//	  //Get ADC Value
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  raw = HAL_ADC_GetValue(&hadc1);
-//
-//	  //Set GPIO pin low for ADC timing on Oscilloscope
-//	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-//
-//	  //Convert string and send message over UART to PC console
-//	  sprintf(msg,"A1: %hu\r\n", raw);
-//	  HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-//
-//	  //Pretend we have something else to do for a while
-//	  HAL_Delay(1);
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+
+//	  //Get ADC Value of Channel 10
+	  ADC1_SELECT_CH10();
+	  HAL_ADC_Start(&hadc1);
+	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	  rawADCval[1] = HAL_ADC_GetValue(&hadc1);
+
+	  //Set GPIO pin low for ADC timing on Oscilloscope
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+
+	  //#############################Debug printing#####################################
+	  //Convert string and send message over UART to PC console
+	  sprintf(msg,"A0: %hu | A1: %hu\r\n", rawADCval[0],rawADCval[1]);
+	  HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+
+	  //Pretend we have something else to do for a while
+	  HAL_Delay(1);
   }
 
   //In case the thread is ever terminated (exited from task loop), which should be never
