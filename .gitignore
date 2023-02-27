@@ -1,6 +1,9 @@
 #settings
 .settings/
 
+#Mac shit
+.DS_Store
+
 #metadata
 .metadata/
 
