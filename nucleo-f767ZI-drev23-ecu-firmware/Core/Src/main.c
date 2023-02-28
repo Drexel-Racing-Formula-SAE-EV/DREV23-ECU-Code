@@ -494,7 +494,6 @@ void StartDefaultTask(void *argument)
 	char msg[64];
 	uint16_t rawADCval[2];
 	short ADC_Percent[2];
-	short percent;
 	uint16_t trq_hex;
 	static struct poten poten1, poten2;
 	poten_init(&poten1, APPS1_MIN, APPS1_MAX);
@@ -543,17 +542,20 @@ void StartDefaultTask(void *argument)
 	  ADC_Percent[0] = adc_raw_to_percent(&poten1, rawADCval[0]);
 	  ADC_Percent[1] = adc_raw_to_percent(&poten2, rawADCval[1]);
 
-	  if (!check_plausibility(ADC_Percent[0], ADC_Percent[1])) {
+	  if (!check_implausability(ADC_Percent[0], ADC_Percent[1])) {
 		  // Define error status
 		  while(1);
 	  }
 	  ADC_Percent[0] += ADC_Percent[1];
 	  ADC_Percent[0] /= 2;
-	  trq_hex = percent_to_trq_hex(percent);
+	  trq_hex = percent_to_trq_hex(ADC_Percent[0]);
 
 	  TxData[1] = trq_hex & 0xFF;
 	  TxData[2] = trq_hex >> 8;
-
+	  if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox) != HAL_OK) {
+		  // Error handle
+		  while(1);
+	  }
 	  //Pretend we have something else to do for a while
 	  HAL_Delay(1);
   }

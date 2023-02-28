@@ -36,7 +36,7 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 }
 
 short adc_raw_to_percent(struct poten *root, uint16_t raw) {
-	return map(raw, root->min, root->min, 0, 100);
+	return (short)map(raw, root->min, root->min, 0, 100);
 }
 
 uint16_t percent_to_trq_hex(short percent){
@@ -49,15 +49,11 @@ uint8_t check_implausability(short L, short R)
 {
     static unsigned int counts;
     // Count number of reoccuring instances of torque values differing more than THRESH %
-    if (abs(L-R) > THRESH){
-        counts++;
-        if (counts >= NSAMPLES){
+    if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
             // Prolonged Implausibililty detected, stop car
         	//Set RFE Low
         	return 0;
-        }
-    } else {
-        counts = 0;
-        return 1;
     }
+	counts = 0;
+	return 1;
 }

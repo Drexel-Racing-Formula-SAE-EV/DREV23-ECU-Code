@@ -19,9 +19,9 @@ void poten_init(struct poten *poten, uint16_t min, uint16_t max);
 
 long map(long x, long in_min, long in_max, long out_min, long out_max);
 
-short adc_raw_to_percent(uint16_t raw);
+short adc_raw_to_percent(struct poten *root, uint16_t raw);
 
-uint16_t percent_to_torque_hex(short percent);
+uint16_t percent_to_trq_hex(short percent);
 
 uint8_t check_implausability(short L, short R);
 
