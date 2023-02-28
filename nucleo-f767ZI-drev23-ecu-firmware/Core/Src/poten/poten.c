@@ -54,10 +54,10 @@ uint8_t check_implausability(short L, short R)
         if (counts >= NSAMPLES){
             // Prolonged Implausibililty detected, stop car
         	//Set RFE Low
-        	return 1;
+        	return 0;
         }
     } else {
         counts = 0;
-        return 0;
+        return 1;
     }
 }
