@@ -66,11 +66,11 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
-CAN_RxHeaderTypeDef rxHeader; //CAN Bus Transmit Header
+CAN_RxHeaderTypeDef RxHeader; //CAN Bus Transmit Header
 CAN_TxHeaderTypeDef TxHeader;
 uint32_t TxMailbox;
 uint8_t TxData[8] = {0x00};
-uint8_t canRX[8] = {0};  //CAN Bus Receive Buffer
+uint8_t RxData[8] = {0};  //CAN Bus Receive Buffer
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -499,6 +499,13 @@ void StartDefaultTask(void *argument)
 	static struct poten poten1, poten2;
 	poten_init(&poten1, APPS1_MIN, APPS1_MAX);
 	poten_init(&poten2, APPS2_MIN, APPS2_MAX);
+	TxHeader.StdId = BAMOCAR_CANBUS_ID;
+	TxHeader.ExtId = 0x00;
+	TxHeader.RTR = CAN_RTR_DATA;
+	TxHeader.IDE = CAN_ID_STD;
+	TxHeader.DLC = 8;
+	TxHeader.TransmitGlobalTime = DISABLE;
+	TxData[0] = TORQUE_REG;
   /* Infinite loop */
   for(;;)
   {
@@ -543,6 +550,9 @@ void StartDefaultTask(void *argument)
 	  ADC_Percent[0] += ADC_Percent[1];
 	  ADC_Percent[0] /= 2;
 	  trq_hex = percent_to_trq_hex(percent);
+
+	  TxData[1] = trq_hex & 0xFF;
+	  TxData[2] = trq_hex >> 8;
 
 	  //Pretend we have something else to do for a while
 	  HAL_Delay(1);
