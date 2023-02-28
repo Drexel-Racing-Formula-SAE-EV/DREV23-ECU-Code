@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include <string.h>
 #include <stdio.h>
+#include "poten/poten.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -37,7 +38,15 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#define BAMOCAR_CANBUS_ID 0x271 // TODO: Verify
+#define ECU_CANBUS_ID 0x10 // TODO: approve
+#define TORQUE_REG 0x90 // TODO: Verify
 
+// TODO: Detemine APPS ranges
+#define APPS1_MIN 0
+#define APPS1_MAX 4095
+#define APPS2_MIN 0
+#define APPS2_MAX 4095
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -57,9 +66,11 @@ const osThreadAttr_t defaultTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
+CAN_RxHeaderTypeDef rxHeader; //CAN Bus Transmit Header
 CAN_TxHeaderTypeDef TxHeader;
-uint8_t TxData[8] = { 0x90, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x00 };
 uint32_t TxMailbox;
+uint8_t TxData[8] = {0x00};
+uint8_t canRX[8] = {0};  //CAN Bus Receive Buffer
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -72,9 +83,6 @@ static void MX_CAN1_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
-uint16_t percent_to_torque_hex(short percent);
-long map(long x, long in_min, long in_max, long out_min, long out_max);
-
 void ADC1_SELECT_CH3(void);
 void ADC1_SELECT_CH10(void);
 /* USER CODE END PFP */
@@ -445,30 +453,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-uint16_t percent_to_trq_hex(short percent){
-    return map(percent, 0, 100, 0x0000, 0x5555);
-}
-
-// Parsed from Arduino's Wiring.h
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
-	long in_range = in_max - in_min;
-	long out_range = out_max - out_min;
-	if (in_range == 0) return out_min + out_range / 2;
-	long num = (x - in_min) * out_range;
-	if (out_range >= 0) {
-		num += in_range / 2;
-	} else {
-		num -= in_range / 2;
-	}
-	long result = num / in_range + out_min;
-	if (out_range >= 0) {
-		if (in_range * num < 0) return result - 1;
-	} else {
-		if (in_range * num >= 0) return result + 1;
-	}
-	return result;
-}
-
 void ADC1_SELECT_CH3(void){
 	//https://controllerstech.com/stm32-adc-multi-channel-without-dma/
 	  ADC_ChannelConfTypeDef sConfig = {0};
@@ -509,6 +493,12 @@ void StartDefaultTask(void *argument)
   /* USER CODE BEGIN 5 */
 	char msg[64];
 	uint16_t rawADCval[2];
+	short ADC_Percent[2];
+	short percent;
+	uint16_t trq_hex;
+	static struct poten poten1, poten2;
+	poten_init(&poten1, APPS1_MIN, APPS1_MAX);
+	poten_init(&poten2, APPS2_MIN, APPS2_MAX);
   /* Infinite loop */
   for(;;)
   {
@@ -542,6 +532,17 @@ void StartDefaultTask(void *argument)
 	  //Convert string and send message over UART to PC console
 	  sprintf(msg,"A0: %hu | A1: %hu\r\n", rawADCval[0],rawADCval[1]);
 	  HAL_UART_Transmit(&huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+
+	  ADC_Percent[0] = adc_raw_to_percent(&poten1, rawADCval[0]);
+	  ADC_Percent[1] = adc_raw_to_percent(&poten2, rawADCval[1]);
+
+	  if (!check_plausibility(ADC_Percent[0], ADC_Percent[1])) {
+		  // Define error status
+		  while(1);
+	  }
+	  ADC_Percent[0] += ADC_Percent[1];
+	  ADC_Percent[0] /= 2;
+	  trq_hex = percent_to_trq_hex(percent);
 
 	  //Pretend we have something else to do for a while
 	  HAL_Delay(1);
