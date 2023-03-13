@@ -1,3 +1,6 @@
+#STM32CubeIDE files
+STM32F767ZITX_*
+
 #settings
 .settings/
 
@@ -9,6 +12,9 @@ Debug/
 debug/
 Release/
 release
+
+#Drivers
+Drivers/ 
 
 # Prerequisites
 *.d

@@ -489,4 +489,4 @@ VP_SYS_VS_tim7.Mode=TIM7
 VP_SYS_VS_tim7.Signal=SYS_VS_tim7
 board=NUCLEO-F767ZI
 boardIOC=true
-isbadioc=true
+isbadioc=false
