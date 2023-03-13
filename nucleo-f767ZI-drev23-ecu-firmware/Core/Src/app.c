@@ -1,8 +1,14 @@
-#include "app.h"
+/*
+ * app.c
+ *
+ *  Created on: Mar 13, 2023
+ *      Author: colebardin
+ */
 
-void app_create(struct app_data* data) {
-    data->system_shutdown = true;
+#include <app.h>
 
-    data->rtd_flag = false;
-    data->torque = 0;
+void app_create(struct app_data *data) {
+	data->rtd_flag = false;
+	data->system_shutdown = false;
+	data->torque = 0;
 }
