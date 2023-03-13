@@ -5,17 +5,18 @@
  *      Author: colebardin
  */
 
-#ifndef INC_APP_H_
-#define INC_APP_H_
+#ifndef APP_H_
+#define APP_H_
 
 #include <stdbool.h>
 #include <stdint.h>
 
-struct app_data = {
+struct app_data {
 		short torque;
 		bool system_shutdown;
 		bool rtd_flag;
 };
 
+void app_create(struct app_data* data);
 
-#endif /* INC_APP_H_ */
+#endif /* APP_H_ */
