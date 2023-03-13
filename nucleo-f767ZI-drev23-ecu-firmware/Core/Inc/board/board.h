@@ -8,8 +8,10 @@
 #ifndef INC_BOARD_BOARD_H_
 #define INC_BOARD_BOARD_H_
 
+#include "board/stm32f767.h"
+
 struct board {
-	//struct stm32f767_device stm32f767;
+	struct stm32f767_device stm32f767;
 };
 
 void board_init(struct board* dev);

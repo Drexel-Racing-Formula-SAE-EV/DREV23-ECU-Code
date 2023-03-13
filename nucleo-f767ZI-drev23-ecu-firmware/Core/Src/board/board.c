@@ -8,5 +8,5 @@
 #include <board/board.h>
 
 void board_init(struct board* dev) {
-	//
+	stm32f767_init(&dev->stm32f767);
 }
