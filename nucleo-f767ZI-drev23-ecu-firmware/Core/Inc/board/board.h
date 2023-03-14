@@ -11,6 +11,7 @@
 #include "board/stm32f767.h"
 
 struct board {
+	// Physical devices on the board
 	struct stm32f767_device stm32f767;
 };
 

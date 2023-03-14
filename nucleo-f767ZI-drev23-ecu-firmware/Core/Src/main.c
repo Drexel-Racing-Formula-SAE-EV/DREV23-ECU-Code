@@ -70,17 +70,6 @@ const osThreadAttr_t defaultTask_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_GPIO_Init(void);
-static void MX_USART3_UART_Init(void);
-static void MX_USB_OTG_FS_PCD_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_CAN1_Init(void);
-static void MX_SPI4_Init(void);
-static void MX_ADC2_Init(void);
-static void MX_ADC3_Init(void);
-static void MX_I2C2_Init(void);
-static void MX_RTC_Init(void);
-static void MX_SPI6_Init(void);
 void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
@@ -119,17 +108,6 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USART3_UART_Init();
-  MX_USB_OTG_FS_PCD_Init();
-  MX_ADC1_Init();
-  MX_CAN1_Init();
-  MX_SPI4_Init();
-  MX_ADC2_Init();
-  MX_ADC3_Init();
-  MX_I2C2_Init();
-  MX_RTC_Init();
-  MX_SPI6_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -244,7 +222,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_ADC1_Init(void)
+void MX_ADC1_Init(void)
 {
 
   /* USER CODE BEGIN ADC1_Init 0 */
@@ -296,7 +274,7 @@ static void MX_ADC1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_ADC2_Init(void)
+void MX_ADC2_Init(void)
 {
 
   /* USER CODE BEGIN ADC2_Init 0 */
@@ -348,7 +326,7 @@ static void MX_ADC2_Init(void)
   * @param None
   * @retval None
   */
-static void MX_ADC3_Init(void)
+void MX_ADC3_Init(void)
 {
 
   /* USER CODE BEGIN ADC3_Init 0 */
@@ -409,7 +387,7 @@ static void MX_ADC3_Init(void)
   * @param None
   * @retval None
   */
-static void MX_CAN1_Init(void)
+void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
@@ -446,7 +424,7 @@ static void MX_CAN1_Init(void)
   * @param None
   * @retval None
   */
-static void MX_I2C2_Init(void)
+void MX_I2C2_Init(void)
 {
 
   /* USER CODE BEGIN I2C2_Init 0 */
@@ -494,7 +472,7 @@ static void MX_I2C2_Init(void)
   * @param None
   * @retval None
   */
-static void MX_RTC_Init(void)
+void MX_RTC_Init(void)
 {
 
   /* USER CODE BEGIN RTC_Init 0 */
@@ -563,7 +541,7 @@ static void MX_RTC_Init(void)
   * @param None
   * @retval None
   */
-static void MX_SPI4_Init(void)
+void MX_SPI4_Init(void)
 {
 
   /* USER CODE BEGIN SPI4_Init 0 */
@@ -603,7 +581,7 @@ static void MX_SPI4_Init(void)
   * @param None
   * @retval None
   */
-static void MX_SPI6_Init(void)
+void MX_SPI6_Init(void)
 {
 
   /* USER CODE BEGIN SPI6_Init 0 */
@@ -643,7 +621,7 @@ static void MX_SPI6_Init(void)
   * @param None
   * @retval None
   */
-static void MX_USART3_UART_Init(void)
+void MX_USART3_UART_Init(void)
 {
 
   /* USER CODE BEGIN USART3_Init 0 */
@@ -678,7 +656,7 @@ static void MX_USART3_UART_Init(void)
   * @param None
   * @retval None
   */
-static void MX_USB_OTG_FS_PCD_Init(void)
+void MX_USB_OTG_FS_PCD_Init(void)
 {
 
   /* USER CODE BEGIN USB_OTG_FS_Init 0 */
@@ -713,7 +691,7 @@ static void MX_USB_OTG_FS_PCD_Init(void)
   * @param None
   * @retval None
   */
-static void MX_GPIO_Init(void)
+void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 

@@ -13,10 +13,11 @@
 #include "board/board.h"
 
 struct app_data {
-		short torque;
-		bool system_shutdown;
-		bool rtd_flag;
-		struct board board;
+	// 
+	short torque;
+	bool system_shutdown;
+	bool rtd_flag;
+	struct board board;
 };
 
 void app_create(struct app_data* data);
