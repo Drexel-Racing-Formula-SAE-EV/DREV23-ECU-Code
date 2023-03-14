@@ -1,5 +1,6 @@
 #STM32CubeIDE files
 STM32F767ZITX_*
+*.launch
 
 #settings
 .settings/

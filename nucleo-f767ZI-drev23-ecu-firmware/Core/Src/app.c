@@ -20,3 +20,23 @@ void app_create() {
 
 	assert(app.dev_task = dev_task_start(&app));
 }
+
+uint16_t apps1_read_count() {
+	ADC_HandleTypeDef *hadc = &app.board.stm32f767.hadc1;
+	uint16_t count;
+	HAL_ADC_Start(hadc);
+	HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
+	count = HAL_ADC_GetValue(hadc);
+	HAL_ADC_Stop(hadc);
+	return count;
+}
+
+uint16_t apps2_read_count() {
+	ADC_HandleTypeDef *hadc = &app.board.stm32f767.hadc2;
+	uint16_t count;
+	HAL_ADC_Start(hadc);
+	HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
+	count = HAL_ADC_GetValue(hadc);
+	HAL_ADC_Stop(hadc);
+	return count;
+}

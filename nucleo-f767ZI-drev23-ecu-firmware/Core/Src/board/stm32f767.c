@@ -85,19 +85,19 @@ void stm32f767_init(struct stm32f767_device *dev) {
 
 	dev->huart3 = huart3;
 
-	dev->can1_mutex = osMutexCreate(&can1_mutex_attr);
+	dev->can1_mutex = osMutexNew(&can1_mutex_attr);
 	assert(dev->can1_mutex);
 
-	dev->i2c2_mutex = osMutexCreate(&i2c2_mutex_attr);
+	dev->i2c2_mutex = osMutexNew(&i2c2_mutex_attr);
 	assert(dev->i2c2_mutex);
 
-	dev->spi4_mutex = osMutexCreate(&spi4_mutex_attr);
+	dev->spi4_mutex = osMutexNew(&spi4_mutex_attr);
 	assert(dev->spi4_mutex);
 
-	dev->spi6_mutex = osMutexCreate(&spi6_mutex_attr);
+	dev->spi6_mutex = osMutexNew(&spi6_mutex_attr);
 	assert(dev->spi6_mutex);
 
-	dev->uart3_mutex = osMutexCreate(&uart3_mutex_attr);
+	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
 }
 

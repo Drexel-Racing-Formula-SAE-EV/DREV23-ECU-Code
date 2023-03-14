@@ -12,6 +12,11 @@
 #include <stdint.h>
 #include "board/board.h"
 
+#define APPS1_MIN 0
+#define APPS1_MAX 4095
+#define APPS2_MIN 0
+#define APPS2_MAX 4095
+
 struct app_data {
 	// 
 	short torque;
@@ -23,5 +28,8 @@ struct app_data {
 };
 
 void app_create();
+
+uint16_t apps1_read_count();
+uint16_t apps2_read_count();
 
 #endif /* APP_H_ */
