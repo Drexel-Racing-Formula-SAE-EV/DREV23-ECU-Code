@@ -23,6 +23,13 @@ extern SPI_HandleTypeDef hspi6;
 
 extern UART_HandleTypeDef huart3;
 
+const osMutexAttr_t can_mutex_attr = {
+	.name = "CAN Bus 1 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
 void stm32f767_init(struct stm32f767_device *dev) {
 	MX_GPIO_Init();
 	MX_USART3_UART_Init();
@@ -35,19 +42,22 @@ void stm32f767_init(struct stm32f767_device *dev) {
 	MX_RTC_Init();
 	MX_SPI6_Init();
 
-	dev->hadc1 = &hadc1;
-	dev->hadc2 = &hadc2;
-	dev->hadc3 = &hadc3;
+	dev->hadc1 = hadc1;
+	dev->hadc2 = hadc2;
+	dev->hadc3 = hadc3;
 
-	dev->hcan1 = &hcan1;
+	dev->hcan1 = hcan1;
 
-	dev->hi2c2 = &hi2c2;
+	dev->hi2c2 = hi2c2;
 
-	dev->hrtc = &hrtc;
+	dev->hrtc = hrtc;
 
-	dev->hspi4 = &hspi4;
-	dev->hspi6 = &hspi6;
+	dev->hspi4 = hspi4;
+	dev->hspi6 = hspi6;
 
-	dev->huart3 = &huart3;
+	dev->huart3 = huart3;
+
+	dev->can_mutex = osMutexCreate(&can_mutex_attr);
+	assert(dev->can_mutex);
 }
 
