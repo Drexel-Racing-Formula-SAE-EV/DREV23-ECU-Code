@@ -18,8 +18,10 @@ struct app_data {
 	bool system_shutdown;
 	bool rtd_flag;
 	struct board board;
+
+	TaskHandle_t dev_task;
 };
 
-void app_create(struct app_data* data);
+void app_create();
 
 #endif /* APP_H_ */

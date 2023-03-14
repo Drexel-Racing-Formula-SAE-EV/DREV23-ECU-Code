@@ -7,14 +7,16 @@
 
 #include <app.h>
 
+#include "tasks/dev_task.h"
+
 struct app_data app = {0};
 
-void app_create(struct app_data *data) {
-	data->rtd_flag = false;
-	data->system_shutdown = false;
-	data->torque = 0;
+void app_create() {
+	app.rtd_flag = false;
+	app.system_shutdown = false;
+	app.torque = 0;
 
-	board_init(&data->board);
+	board_init(&app.board);
 
-	// Create tasks
+	assert(app.dev_task = dev_task_start(&app));
 }
