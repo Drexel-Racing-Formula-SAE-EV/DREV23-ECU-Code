@@ -23,8 +23,36 @@ extern SPI_HandleTypeDef hspi6;
 
 extern UART_HandleTypeDef huart3;
 
-const osMutexAttr_t can_mutex_attr = {
+const osMutexAttr_t can1_mutex_attr = {
 	.name = "CAN Bus 1 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
+const osMutexAttr_t i2c2_mutex_attr = {
+	.name = "I2C 2 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
+const osMutexAttr_t spi4_mutex_attr = {
+	.name = "SPI 4 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
+const osMutexAttr_t spi6_mutex_attr = {
+	.name = "SPI 6 Mutex",
+	.attr_bits = osMutexPrioInherit | osMutexRecursive,
+	.cb_mem = NULL,
+	.cb_size = 0UL,
+};
+
+const osMutexAttr_t uart3_mutex_attr = {
+	.name = "UART 3 Mutex",
 	.attr_bits = osMutexPrioInherit | osMutexRecursive,
 	.cb_mem = NULL,
 	.cb_size = 0UL,
@@ -57,7 +85,19 @@ void stm32f767_init(struct stm32f767_device *dev) {
 
 	dev->huart3 = huart3;
 
-	dev->can_mutex = osMutexCreate(&can_mutex_attr);
-	assert(dev->can_mutex);
+	dev->can1_mutex = osMutexCreate(&can1_mutex_attr);
+	assert(dev->can1_mutex);
+
+	dev->i2c2_mutex = osMutexCreate(&i2c2_mutex_attr);
+	assert(dev->i2c2_mutex);
+
+	dev->spi4_mutex = osMutexCreate(&spi4_mutex_attr);
+	assert(dev->spi4_mutex);
+
+	dev->spi6_mutex = osMutexCreate(&spi6_mutex_attr);
+	assert(dev->spi6_mutex);
+
+	dev->uart3_mutex = osMutexCreate(&uart3_mutex_attr);
+	assert(dev->uart3_mutex);
 }
 

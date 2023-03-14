@@ -27,7 +27,12 @@ struct stm32f767_device {
 
 	UART_HandleTypeDef huart3;
 
-	osMutexId_t can_mutex;
+	osMutexId_t can1_mutex;
+	osMutexId_t i2c2_mutex;
+	osMutexId_t spi4_mutex;
+	osMutexId_t spi6_mutex;
+	osMutexId_t	uart3_mutex;
+
 };
 
 void stm32f767_init(struct stm32f767_device *dev);
