@@ -53,7 +53,6 @@ extern "C" {
 void Error_Handler(void);
 void   MX_GPIO_Init(void);
 void   MX_USART3_UART_Init(void);
-void   MX_USB_OTG_FS_PCD_Init(void);
 void   MX_ADC1_Init(void);
 void   MX_CAN1_Init(void);
 void   MX_SPI4_Init(void);

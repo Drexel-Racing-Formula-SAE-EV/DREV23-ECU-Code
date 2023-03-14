@@ -28,6 +28,6 @@ struct stm32f767_device {
 	UART_HandleTypeDef *huart3;
 };
 
-void stm32f767_init(struct stm32f767_device *stm32f767);
+void stm32f767_init(struct stm32f767_device *dev);
 
 #endif /* INC_BOARD_STM32F767_H_ */
