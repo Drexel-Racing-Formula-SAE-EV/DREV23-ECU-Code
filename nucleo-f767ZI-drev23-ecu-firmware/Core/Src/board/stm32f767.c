@@ -13,6 +13,7 @@ extern ADC_HandleTypeDef hadc2;
 extern ADC_HandleTypeDef hadc3;
 
 extern CAN_HandleTypeDef hcan1;
+extern CAN_TxHeaderTypeDef can1_txheader;
 
 extern I2C_HandleTypeDef hi2c2;
 
@@ -58,7 +59,8 @@ const osMutexAttr_t uart3_mutex_attr = {
 	.cb_size = 0UL,
 };
 
-void stm32f767_init(struct stm32f767_device *dev) {
+void stm32f767_init(struct stm32f767_device *dev)
+{
 	MX_GPIO_Init();
 	MX_USART3_UART_Init();
 	MX_ADC1_Init();
@@ -75,6 +77,7 @@ void stm32f767_init(struct stm32f767_device *dev) {
 	dev->hadc3 = hadc3;
 
 	dev->hcan1 = hcan1;
+	dev->can1_txheader;
 
 	dev->hi2c2 = hi2c2;
 
@@ -100,4 +103,3 @@ void stm32f767_init(struct stm32f767_device *dev) {
 	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
 }
-

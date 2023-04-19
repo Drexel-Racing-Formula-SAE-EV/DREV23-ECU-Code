@@ -8,6 +8,7 @@
 #include <app.h>
 
 #include "tasks/dev_task.h"
+#include "tasks/apps_task.h"
 
 struct app_data app = {0};
 
@@ -19,6 +20,7 @@ void app_create() {
 	board_init(&app.board);
 
 	assert(app.dev_task = dev_task_start(&app));
+	assert(app.apps_task = apps_task_start(&app));
 }
 
 uint16_t apps1_read_count() {

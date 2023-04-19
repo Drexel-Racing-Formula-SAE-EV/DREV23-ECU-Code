@@ -25,6 +25,7 @@ struct app_data {
 	struct board board;
 
 	TaskHandle_t dev_task;
+	TaskHandle_t apps_task;
 };
 
 void app_create();
