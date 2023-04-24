@@ -30,7 +30,4 @@ struct app_data {
 
 void app_create();
 
-uint16_t apps1_read_count();
-uint16_t apps2_read_count();
-
 #endif /* APP_H_ */

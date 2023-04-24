@@ -20,4 +20,6 @@ struct board {
 
 void board_init(struct board* dev);
 
+uint16_t apps_read_count(void *arg);
+
 #endif /* INC_BOARD_BOARD_H_ */

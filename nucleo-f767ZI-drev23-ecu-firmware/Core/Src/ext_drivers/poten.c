@@ -10,9 +10,10 @@
 #define THRESH 10
 #define NSAMPLES 100
 
-void poten_init(struct poten *poten, uint16_t min, uint16_t max, uint16_t(*read_count)(void)) {
+void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg)) {
 	poten->min = min;
 	poten->max = max;
+	poten->handle = handle;
 	poten->read_count = read_count;
 }
 

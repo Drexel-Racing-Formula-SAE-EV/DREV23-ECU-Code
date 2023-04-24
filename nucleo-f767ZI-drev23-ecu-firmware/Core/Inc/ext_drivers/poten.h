@@ -17,10 +17,12 @@ struct poten {
 	uint16_t count;
 	short percent;
 
-	uint16_t(*read_count)(void);
+	void *handle;
+
+	uint16_t(*read_count)(void *arg);
 };
 
-void poten_init(struct poten *poten, uint16_t min, uint16_t max, uint16_t(*read_count)(void));
+void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg));
 
 long map(long x, long in_min, long in_max, long out_min, long out_max);
 
