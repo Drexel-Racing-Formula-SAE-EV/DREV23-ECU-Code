@@ -33,7 +33,7 @@ struct stm32f767_device {
 	osMutexId_t spi4_mutex;
 	osMutexId_t spi6_mutex;
 	osMutexId_t	uart3_mutex;
-
+	osMessageQueueId_t can1_mq;
 };
 
 void stm32f767_init(struct stm32f767_device *dev);

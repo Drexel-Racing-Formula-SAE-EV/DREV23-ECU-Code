@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "board.h": "c",
-        "stm32f767.h": "c"
+        "stm32f767.h": "c",
+        "canbus_task.h": "c"
     }
 }
