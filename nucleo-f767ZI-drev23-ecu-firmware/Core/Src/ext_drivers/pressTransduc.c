@@ -1,24 +1,34 @@
 /*
- * poten.c
+ * pressTrans.c
  *
- *  Created on: Mar 14, 2023
- *      Author: colebardin
+ *  Created on: Apr 24, 2023
+ *      Author: Benedict Hofmockel
  */
-#include <ext_drivers/poten.h>
+#include <ext_drivers/pressTransduc.h>
 #include <math.h>
 
 #define THRESH 10
 #define NSAMPLES 100
 
-void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg)) {
-	poten->min = min;
-	poten->max = max;
-	poten->handle = handle;
-	poten->read_count = read_count;
+void pressTransduc_init(struct pressTrans *pressTrans,
+					uint16_t min,
+					uint16_t max,
+					void *handle,
+					uint8_t channelNum,
+					uint16_t(*read_count)(void *arg)) {
+	pressTrans->min = min;
+	pressTrans->max = max;
+	pressTrans->handle = handle;
+	pressTrans->channelNum = channelNum;
+	pressTrans->read_count = read_count;
 }
 
 // Parsed from Arduino's Wiring.h
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
+long map(long x,
+		long in_min,
+		long in_max,
+		long out_min,
+		long out_max) {
 	long in_range = in_max - in_min;
 	long out_range = out_max - out_min;
 	if (in_range == 0) return out_min + out_range / 2;
@@ -37,7 +47,8 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 	return result;
 }
 
-short adc_raw_to_percent(struct poten *root, uint16_t raw) {
+short adc_raw_to_percent(struct pressTrans *root,
+		uint16_t raw) {
 	return (short)map(raw, root->min, root->min, 0, 100);
 }
 
@@ -47,8 +58,8 @@ uint16_t percent_to_trq_hex(short percent){
 	return map(percent, 0, 100, 0x0000, 0x5555);
 }
 
-uint8_t check_implausability(short L, short R)
-{
+uint8_t check_implausability(short L,
+							short R){
     static unsigned int counts = 0;
     // Count number of reoccuring instances of torque values differing more than THRESH %
     if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
