@@ -4,6 +4,7 @@ STM32F767ZITX_*
 
 #settings
 .settings/
+.vscode/
 
 #metadata
 .metadata/
