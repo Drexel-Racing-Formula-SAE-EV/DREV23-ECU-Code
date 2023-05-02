@@ -30,9 +30,9 @@ void canbus_task_fn(void *arg) {
 
     struct canbus_device *canbus_device = &data->board.canbus_device;
     CAN_HandleTypeDef *hcan = canbus_device->hcan;
+    CAN_TxHeaderTypeDef *tx_header = data->board.canbus_device.tx_header;
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
     canbus_packet tx_packet;
-    CAN_TxHeaderTypeDef *tx_header = data->board.canbus_device.tx_header;
 
     osStatus_t status;
     uint8_t tx_data[8] = {0};

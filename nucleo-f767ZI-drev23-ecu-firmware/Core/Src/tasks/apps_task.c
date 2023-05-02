@@ -56,7 +56,7 @@ void apps_task_fn(void *arg) {
         throttle_percent[0] = adc_raw_to_percent(apps1, adc_raw[0]);
         throttle_percent[1] = adc_raw_to_percent(apps2, adc_raw[1]);
 
-        // Check plausibilty
+        // TODO: Check plausibilty
 
         avg_throttle = (throttle_percent[0] + throttle_percent[1]) / 2;
         data->torque = avg_throttle;
@@ -65,7 +65,8 @@ void apps_task_fn(void *arg) {
         tx_packet.tx_data[1] = TRQ_HEX_TO_LSB(torque_hex);
         tx_packet.tx_data[2] = TRQ_HEX_TO_MSB(torque_hex);
 
-        osMessageQueuePut(canbus_mq, &tx_packet, NULL, HAL_MAX_DELAY);
+        osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
+        xTaskNotify(data->canbus_task, 0, 0);
 
         osDelay(100);
     }
