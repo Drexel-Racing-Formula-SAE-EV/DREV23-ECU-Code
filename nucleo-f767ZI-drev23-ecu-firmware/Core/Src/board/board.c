@@ -15,7 +15,7 @@ void board_init(struct board* dev) {
 	pressTransduc_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc2, bse_read_count);
 }
 
-uint16_t apps_read_count(void *arg) {
+uint16_t bse_change_channel(void *arg) {
 //	struct poten *apps = (struct poten *)arg;
 //	ADC_HandleTypeDef *hadc = (ADC_HandleTypeDef *)apps->handle;
 //	uint16_t count;
