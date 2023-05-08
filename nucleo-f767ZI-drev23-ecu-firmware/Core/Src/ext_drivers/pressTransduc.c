@@ -71,3 +71,8 @@ uint8_t check_implausability(short L,
 	return 1;
 }
 
+uint8_t switch_to_defined_channel (struct pressTrans *root ){
+	//TODO: add code here from the prefeature APPS branch
+}
+
+
