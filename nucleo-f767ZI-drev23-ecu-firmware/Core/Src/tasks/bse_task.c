@@ -9,10 +9,10 @@
  *
  */
 
-#include "tasks/apps_task.h"
+#include <tasks/bse_task.h>
 
 /**
- * @brief Actual APPS task function
+ * @brief Actual BSE task function
  *
  * @param arg App_data struct pointer converted to void pointer
  */
@@ -21,7 +21,7 @@ void apps_task_fn(void *arg);
 TaskHandle_t apps_task_start(struct app_data *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(apps_task_fn, "APPS task", 128, (void *)data, 7, &handle);
+    xTaskCreate(apps_task_fn, "BSE task", 128, (void *)data, 7, &handle);
     return handle;
 }
 

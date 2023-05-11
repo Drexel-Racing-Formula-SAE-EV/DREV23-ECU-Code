@@ -8,7 +8,7 @@
 #ifndef INC_BOARD_BOARD_H_
 #define INC_BOARD_BOARD_H_
 
-#include <ext_drivers/pressTransduc.h>
+#include <ext_drivers/pressTrans.h>
 #include "board/stm32f767.h"
 
 struct board {
@@ -20,6 +20,6 @@ struct board {
 
 void board_init(struct board* dev);
 
-uint16_t apps_read_count(void *arg);
+uint16_t bse_read_count (void *arg);
 
 #endif /* INC_BOARD_BOARD_H_ */

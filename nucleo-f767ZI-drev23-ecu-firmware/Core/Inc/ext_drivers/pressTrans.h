@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-struct pressTransduc {
+struct pressTrans {
 	uint16_t min;
 	uint16_t max;
 
@@ -36,8 +36,8 @@ long map(long x,
 		long out_min,
 		long out_max);
 
-short adc_raw_to_percent(struct pressTrans *root,
-		uint16_t raw);
+//short adc_raw_to_percent(struct pressTrans *root,
+//		uint16_t raw);
 
 uint16_t percent_to_trq_hex(short percent);
 
