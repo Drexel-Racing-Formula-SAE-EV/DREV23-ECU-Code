@@ -12,10 +12,10 @@
 #include <stdint.h>
 #include "board/board.h"
 
-#define APPS1_MIN 0
-#define APPS1_MAX 4095
-#define APPS2_MIN 0
-#define APPS2_MAX 4095
+#define APPS1_MIN 502
+#define APPS1_MAX 1900
+#define APPS2_MIN 890
+#define APPS2_MAX 2105
 
 struct app_data {
 	// 

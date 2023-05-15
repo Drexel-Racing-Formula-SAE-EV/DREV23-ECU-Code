@@ -38,7 +38,14 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 }
 
 short adc_raw_to_percent(struct poten *root, uint16_t raw) {
-	return (short)map(raw, root->min, root->min, 0, 100);
+	short percent = (short)map(raw, root->min, root->max, 100, 0);
+	if(percent > 100){
+		return 100;
+	}else if(percent < 0){
+		return 0;
+	}else{
+		return percent;
+	}
 }
 
 uint16_t percent_to_trq_hex(short percent){
