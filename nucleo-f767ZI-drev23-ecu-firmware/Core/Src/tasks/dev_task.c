@@ -28,11 +28,11 @@ void dev_task_fn(void *args)
 
     while (1)
     {
-    	adr_raw[0] = bse1->read_count((void *)bse1);
-    	adr_raw[1] = bse2->read_count((void *)bse2);
+    	adc_raw[0] = bse1->read_count((void *)bse1);
+    	adc_raw[1] = bse2->read_count((void *)bse2);
 
-		sprintf(msg,"PT1: %hu | PT2: %hu\r\n", adr_raw[0],adr_raw[1]);
-		HAL_UART_Transmit(&data->board->stm32f767->huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+		sprintf(msg,"PT1: %hu | PT2: %hu\r\n", adc_raw[0],adc_raw[1]);
+		HAL_UART_Transmit(&data->board.stm32f767.huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
     }
 
     // Get rid of unused warning for dev task.

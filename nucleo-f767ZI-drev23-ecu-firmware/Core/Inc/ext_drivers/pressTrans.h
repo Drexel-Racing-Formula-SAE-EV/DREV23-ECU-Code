@@ -9,6 +9,7 @@
 #define INC_EXT_DRIVERS_PRESSTRANS_H_
 
 #include <stdint.h>
+#include <stm32f7xx_hal.h>
 
 struct pressTrans {
 	uint16_t min;
@@ -23,7 +24,7 @@ struct pressTrans {
 	uint16_t(*read_count)(void *arg); //this is a function pointer in C, kinda weird ain't it.
 };
 
-void pressTransduc_init(struct pressTrans *pressTrans,
+void pressTrans_init(struct pressTrans *pressTrans,
 		uint16_t min,
 		uint16_t max,
 		void *handle,

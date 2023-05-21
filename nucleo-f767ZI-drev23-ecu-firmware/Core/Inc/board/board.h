@@ -14,8 +14,8 @@
 struct board {
 	// Physical devices on the board
 	struct stm32f767_device stm32f767;
-	struct pressTransduc bse1;
-	struct pressTransduc bse2;
+	struct pressTrans bse1;
+	struct pressTrans bse2;
 };
 
 void board_init(struct board* dev);

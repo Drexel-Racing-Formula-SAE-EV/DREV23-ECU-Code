@@ -12,7 +12,7 @@
 #define THRESH 10
 #define NSAMPLES 100
 
-void pressTransduc_init(struct pressTrans *pressTrans,
+void pressTrans_init(struct pressTrans *pressTrans,
 					uint16_t min,
 					uint16_t max,
 					void *handle,
