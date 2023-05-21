@@ -32,8 +32,8 @@ uint16_t bse_read_count (void *arg){
 	ADC_HandleTypeDef *hadc = (ADC_HandleTypeDef *) pt->handle;
 	uint16_t count;
 
-	HAL_ADC_START(hadc);
-	HAL_ADC_PollForConverison(hadc, HAL_MAX_DELAY);
+	HAL_ADC_Start(hadc);
+	HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
 	count = HAL_ADC_GetValue(hadc);
 	HAL_ADC_Stop(hadc);
 
