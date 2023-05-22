@@ -81,12 +81,12 @@ uint8_t switch_to_defined_channel (struct pressTrans *root){
 	sConfig.Channel = root->channelNum;
 	sConfig.Rank = ADC_REGULAR_RANK_1;
 	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
-	if (HAL_ADC_ConfigChannel(&root->handle, &sConfig) != HAL_OK)
+	if (HAL_ADC_ConfigChannel(root->handle, &sConfig) != HAL_OK)
 	{
-		return 1;
 //		Error_Handler(); //Ben currently has no clue what this does
+		return HAL_ERROR;
 	} else {
-		return 0;
+		return HAL_OK;
 	}
 }
 

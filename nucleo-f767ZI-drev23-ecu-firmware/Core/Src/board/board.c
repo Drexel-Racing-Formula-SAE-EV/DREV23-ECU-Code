@@ -11,8 +11,8 @@
 void board_init(struct board* dev) {
 	stm32f767_init(&dev->stm32f767);
 
-	pressTrans_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc1, 13, bse_read_count);
-	pressTrans_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc2, 9, bse_read_count);
+	pressTrans_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, 13, bse_read_count);
+	pressTrans_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, 9, bse_read_count);
 }
 
 uint16_t bse_read_count (void *arg){

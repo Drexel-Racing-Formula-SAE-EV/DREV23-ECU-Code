@@ -28,8 +28,11 @@ void dev_task_fn(void *args)
 
     while (1)
     {
-    	adc_raw[0] = bse1->read_count((void *)bse1);
+    	switch_to_defined_channel(bse2);
     	adc_raw[1] = bse2->read_count((void *)bse2);
+    	osDelay(50);
+    	switch_to_defined_channel(bse1);
+    	adc_raw[0] = bse1->read_count((void *)bse1);
 
 		sprintf(msg,"PT1: %hu | PT2: %hu\r\n", adc_raw[0],adc_raw[1]);
 		HAL_UART_Transmit(&data->board.stm32f767.huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);

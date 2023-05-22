@@ -19,7 +19,7 @@ struct pressTrans {
 	short percent;
 
 	void *handle; //ADC handle goes here
-	uint8_t channelNum; //ADC channel number
+	uint32_t channelNum; //ADC channel number
 
 	uint16_t(*read_count)(void *arg); //this is a function pointer in C, kinda weird ain't it.
 };

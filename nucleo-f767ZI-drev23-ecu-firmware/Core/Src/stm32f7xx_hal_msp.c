@@ -141,12 +141,13 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     __HAL_RCC_GPIOC_CLK_ENABLE();
     /**ADC3 GPIO Configuration
     PF3     ------> ADC3_IN9
+    PF4     ------> ADC3_IN14
     PC3     ------> ADC3_IN13
     */
-    GPIO_InitStruct.Pin = Pressure_Transducer_2_Analog_Pin;
+    GPIO_InitStruct.Pin = Pressure_Transducer_2_Analog_Pin|GPIO_PIN_4;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(Pressure_Transducer_2_Analog_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
 
     GPIO_InitStruct.Pin = Pressure_Transducer_1_Analog_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
@@ -212,9 +213,10 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
 
     /**ADC3 GPIO Configuration
     PF3     ------> ADC3_IN9
+    PF4     ------> ADC3_IN14
     PC3     ------> ADC3_IN13
     */
-    HAL_GPIO_DeInit(Pressure_Transducer_2_Analog_GPIO_Port, Pressure_Transducer_2_Analog_Pin);
+    HAL_GPIO_DeInit(GPIOF, Pressure_Transducer_2_Analog_Pin|GPIO_PIN_4);
 
     HAL_GPIO_DeInit(Pressure_Transducer_1_Analog_GPIO_Port, Pressure_Transducer_1_Analog_Pin);
 
