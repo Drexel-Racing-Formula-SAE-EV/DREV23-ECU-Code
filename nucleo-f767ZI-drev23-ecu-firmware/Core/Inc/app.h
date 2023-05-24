@@ -27,6 +27,7 @@ struct app_data {
 	TaskHandle_t dev_task;
 	TaskHandle_t apps_task;
 	TaskHandle_t canbus_task;
+	TaskHandle_t rtd_task;
 };
 
 void app_create();
