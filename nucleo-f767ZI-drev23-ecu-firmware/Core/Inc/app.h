@@ -21,7 +21,7 @@ struct app_data {
 	// 
 	short torque;
 	bool system_shutdown;
-	bool rtd_flag;
+	bool APPS_Control_flag;
 	struct board board;
 
 	TaskHandle_t dev_task;

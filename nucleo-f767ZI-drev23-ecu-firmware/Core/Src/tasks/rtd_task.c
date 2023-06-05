@@ -22,7 +22,7 @@ TaskHandle_t rtd_task_start(struct app_data *data) {
 
 void rtd_task_fn(void *arg) {
 	#define HIGH_VALUE ((GPIO_PinState) 1)
-//    struct app_data *data = (struct app_data *)arg;
+    struct app_data *data = (struct app_data *)arg;
 
 
     //INPUTS
@@ -32,20 +32,21 @@ void rtd_task_fn(void *arg) {
 
 
     while(1) {
-    	tractiveSystemValue = HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_9);
+    	tractiveSystemValue = HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_9); //TSAL HV signal in Altium
     	brakeValue = 1; //TODO: change once the brake flag is done
-    	rtdButtonValue = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);;
+    	rtdButtonValue = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 
         if (tractiveSystemValue == 1 && brakeValue == 1 && rtdButtonValue == 1) {
 			HAL_GPIO_WritePin(GPIOF, GPIO_PIN_13, HIGH_VALUE); //Set Buzzer High
 
-			//TODO: ENABLE APPS HERE
+			data->APPS_Control_flag = true;
 
+			/* Setting Bamocar RFE and FRG/RUN signals high */
 			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, HIGH_VALUE); //Set BAMOCAR RFE High
+			osDelay(600); //
 
-			osDelay(5000);
-	    	brakeValue = 1; //change once the brake values are confirmed
 	    	tractiveSystemValue = HAL_GPIO_ReadPin(GPIOG, GPIO_PIN_9); //change once the brake values are confirmed
+	    	brakeValue = 1; //change once the brake values are confirmed
 
 			 if (tractiveSystemValue == 1 && brakeValue == 1) {
 				 HAL_GPIO_WritePin(GPIOF, GPIO_PIN_12, HIGH_VALUE); //set BAMOCAR FRG RUN HIGH
