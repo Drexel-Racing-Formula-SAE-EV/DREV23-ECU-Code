@@ -40,7 +40,7 @@ void dev_task_fn(void *args)
     	bse2->percent = adc_raw_to_percent(bse2, bse2->raw_value);
     	data->brakePercentage = (bse1->percent + bse2->percent) / 2;
 
-		sprintf(msg,"| PT1_raw: %hu\t| PT1_perc: %hu\t| PT2: %hu\t| PT2_perc: %hu\t| brakePercentage: %d\t|\r\n", bse1->raw_value, bse1->percent, bse2->raw_value, bse2->percent, data->brakePercentage); //TODO: PLEASE, FOR THE LOVE OF THE ORGANIZATION, CHANGE adc_raw_to_percent TO BE FLAOTING POINT BASED AND ALSO CHANGE CONVERSION RANGE BETWEEN RAW AND SENT VALUES
+		sprintf(msg,"| PT1_raw: %hu\t| PT1_perc: %hu\t| PT2: %hu\t| PT2_perc: %hu\t| brakePerc: %d\t|\r\n", bse1->raw_value, bse1->percent, bse2->raw_value, bse2->percent, data->brakePercentage); //TODO: PLEASE, FOR THE LOVE OF THE ORGANIZATION, CHANGE adc_raw_to_percent TO BE FLAOTING POINT BASED AND ALSO CHANGE CONVERSION RANGE BETWEEN RAW AND SENT VALUES
 		HAL_UART_Transmit(&data->board.stm32f767.huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
     }
 
