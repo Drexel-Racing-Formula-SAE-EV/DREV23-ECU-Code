@@ -20,6 +20,6 @@ struct board {
 
 void board_init(struct board* dev);
 
-uint16_t bse_read_count (void *arg);
+uint16_t bse_read_value (void *arg);
 
 #endif /* INC_BOARD_BOARD_H_ */

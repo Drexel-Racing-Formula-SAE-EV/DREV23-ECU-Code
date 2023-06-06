@@ -15,7 +15,7 @@ struct pressTrans {
 	uint16_t min;
 	uint16_t max;
 
-	uint16_t count;
+	uint16_t raw_value;
 	short percent;
 
 	void *handle; //ADC handle goes here
@@ -29,16 +29,18 @@ void pressTrans_init(struct pressTrans *pressTrans,
 		uint16_t max,
 		void *handle,
 		uint8_t channelNum,
-		uint16_t(*read_count)(void *arg));
+		uint16_t(*read_count)(void *arg)
+		);
 
 long map(long x,
 		long in_min,
 		long in_max,
 		long out_min,
-		long out_max);
+		long out_max
+		);
 
-//short adc_raw_to_percent(struct pressTrans *root,
-//		uint16_t raw);
+short adc_raw_to_percent(struct pressTrans *root,
+		uint16_t raw);
 
 uint16_t percent_to_trq_hex(short percent);
 

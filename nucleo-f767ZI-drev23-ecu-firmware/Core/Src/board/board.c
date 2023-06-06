@@ -11,33 +11,21 @@
 void board_init(struct board* dev) {
 	stm32f767_init(&dev->stm32f767);
 
-	pressTrans_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, 13, bse_read_count);
-	pressTrans_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, 9, bse_read_count);
+	pressTrans_init(&dev->bse1, BSE1_MIN, BSE1_MAX, &dev->stm32f767.hadc3, 13, bse_read_value);
+	pressTrans_init(&dev->bse2, BSE2_MIN, BSE2_MAX, &dev->stm32f767.hadc3, 9, bse_read_value);
 }
 
-uint16_t bse_read_count (void *arg){
-//		struct poten *apps = (struct poten *)arg;
-//		ADC_HandleTypeDef *hadc = (ADC_HandleTypeDef *)apps->handle;
-//		uint16_t count;
-//
-//		HAL_ADC_Start(hadc);
-//		HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
-//		count = HAL_ADC_GetValue(hadc);
-//		HAL_ADC_Stop(hadc);
-//
-//		apps->count = count;
-//
-//		return count;
+uint16_t bse_read_value (void *arg){
 	struct pressTrans *pt = (struct pressTrans *)arg;
 	ADC_HandleTypeDef *hadc = (ADC_HandleTypeDef *) pt->handle;
-	uint16_t count;
+	uint16_t raw_value;
 
 	HAL_ADC_Start(hadc);
 	HAL_ADC_PollForConversion(hadc, HAL_MAX_DELAY);
-	count = HAL_ADC_GetValue(hadc);
+	raw_value = HAL_ADC_GetValue(hadc);
 	HAL_ADC_Stop(hadc);
 
-	pt->count = count;
+	pt->raw_value = raw_value;
 
-	return count;
+	return raw_value;
 }

@@ -22,19 +22,25 @@ void dev_task_fn(void *args)
     struct pressTrans *bse1 = &data->board.bse1;
     struct pressTrans *bse2 = &data->board.bse2;
 
-    uint16_t adc_raw[2];
-
 	char msg[64];
 
     while (1)
     {
+    	/* digitize the analog signal of the Brake pressure Transducers*/
     	switch_to_defined_channel(bse2);
-    	adc_raw[1] = bse2->read_count((void *)bse2);
-    	osDelay(50);
+    	bse2->raw_value = bse2->read_count((void *)bse2);
+    	osDelay(20); //TODO: this is needed here, please find out why
     	switch_to_defined_channel(bse1);
-    	adc_raw[0] = bse1->read_count((void *)bse1);
+    	bse1->raw_value = bse1->read_count((void *)bse1);
 
-		sprintf(msg,"PT1: %hu | PT2: %hu\r\n", adc_raw[0],adc_raw[1]);
+    	/* Calculate per device percentage and combined percentage */
+//    	bse1->percent = ((float)bse1->raw_value / (float)bse1->max)* 100;
+//    	bse2->percent = ((float)bse2->raw_value / (float)bse2->max)* 100;
+    	bse1->percent = adc_raw_to_percent(bse1, bse1->raw_value);
+    	bse2->percent = adc_raw_to_percent(bse2, bse2->raw_value);
+    	data->brakePercentage = (bse1->percent + bse2->percent) / 2;
+
+		sprintf(msg,"PT1: %hu | PT2: %hu | brakePercent: %d\r\n", bse1->raw_value, bse2->raw_value, data->brakePercentage); //TODO: PLEASE, FOR THE LOVE OF THE ORGANIZATION, CHANGE adc_raw_to_percent TO BE FLAOTING POINT BASED AND ALSO CHANGE CONVERSION RANGE BETWEEN RAW AND SENT VALUES
 		HAL_UART_Transmit(&data->board.stm32f767.huart3, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
     }
 

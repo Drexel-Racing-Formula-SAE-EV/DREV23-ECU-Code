@@ -49,10 +49,17 @@ long map(long x,
 	return result;
 }
 
-//short adc_raw_to_percent(struct pressTrans *root,
-//		uint16_t raw) {
-//	return (short)map(raw, root->min, root->min, 0, 100);
-//}
+short adc_raw_to_percent(struct pressTrans *root, uint16_t raw) {
+//	short percent = (short)map(raw, root->min, root->max, 100, 0);
+	short percent = (short)map(raw, root->min, root->max, 0, 100);
+	if ( percent > 100 ){
+		return 100;
+	} else if ( percent < 0 ){
+		return 0;
+	} else {
+		return percent;
+	}
+}
 
 uint16_t percent_to_trq_hex(short percent){ //TODO:  rename and rewrite this function for BSE from prefeature APPS branch fork
     if (percent > 100) percent = 100;
@@ -66,11 +73,11 @@ uint8_t check_implausability(short L,
     // Count number of reoccuring instances of torque values differing more than THRESH %
     if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
             // Prolonged Implausibililty detected, stop car
+	return 1; //TODO:  rewrite this function for BSE from prefeature APPS b
         	//Set RFE Low
         	return 0;
     }
 	counts = 0;
-	return 1; //TODO:  rewrite this function for BSE from prefeature APPS branch fork
 }
 
 uint8_t switch_to_defined_channel (struct pressTrans *root){
