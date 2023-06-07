@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "board/board.h"
+#include "main.h"
 
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 0
 #define BSE1_MAX 2238 //Brake emulator max: 2240 //Theoretical value (ADC max): 4095
@@ -22,7 +23,7 @@ struct app_data {
 	short torque;
 	int16_t brakePercentage;
 	bool system_shutdown;
-	bool rtd_flag;
+	bool APPS_Control_flag;
 	struct board board;
 
 	TaskHandle_t dev_task;
