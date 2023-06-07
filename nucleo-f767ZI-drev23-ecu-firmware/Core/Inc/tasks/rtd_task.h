@@ -13,7 +13,6 @@
 
 #include "cmsis_os.h"
 #include "app.h"
-
 /**
  * @brief Starts the CANBus task
  *
