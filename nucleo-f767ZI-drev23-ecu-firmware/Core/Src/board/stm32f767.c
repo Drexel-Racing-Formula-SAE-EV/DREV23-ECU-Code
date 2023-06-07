@@ -7,13 +7,13 @@
 
 #include <board/stm32f767.h>
 #include "main.h"
+#include "ext_drivers/canbus.h"
 
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern ADC_HandleTypeDef hadc3;
 
 extern CAN_HandleTypeDef hcan1;
-extern CAN_TxHeaderTypeDef can1_txheader;
 
 extern I2C_HandleTypeDef hi2c2;
 
@@ -77,7 +77,7 @@ void stm32f767_init(struct stm32f767_device *dev)
 	dev->hadc3 = hadc3;
 
 	dev->hcan1 = hcan1;
-	dev->can1_txheader;
+	dev->can1_mq = osMessageQueueNew(128, sizeof(canbus_packet), NULL);
 
 	dev->hi2c2 = hi2c2;
 
