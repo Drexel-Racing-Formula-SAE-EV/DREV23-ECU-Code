@@ -22,4 +22,5 @@ void app_create() {
 
 	assert(app.dev_task = dev_task_start(&app));
 	assert(app.rtd_task = rtd_task_start(&app));
+	assert(app.ppc_task = ppc_task_start(&app));
 }

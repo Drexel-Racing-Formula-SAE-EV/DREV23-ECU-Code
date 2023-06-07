@@ -28,6 +28,7 @@ struct app_data {
 
 	TaskHandle_t dev_task;
 	TaskHandle_t rtd_task;
+	TaskHandle_t ppc_task;
 };
 
 void app_create();
