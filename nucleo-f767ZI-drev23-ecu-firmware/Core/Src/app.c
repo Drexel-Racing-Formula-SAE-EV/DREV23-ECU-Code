@@ -5,24 +5,20 @@
  *      Author: colebardin
  */
 
-#include "app.h"
+#include <app.h>
+#include <tasks/bse_task.h>
 
 #include "tasks/dev_task.h"
-#include "tasks/apps_task.h"
-#include "tasks/canbus_task.h"
-#include "tasks/rtd_task.h"
 
 struct app_data app = {0};
 
 void app_create() {
-	app.APPS_Control_flag = false;
+	app.rtd_flag = false;
 	app.system_shutdown = false;
 	app.torque = 0;
 
 	board_init(&app.board);
 
-	//assert(app.dev_task = dev_task_start(&app));
-	assert(app.canbus_task = canbus_task_start(&app));
-	assert(app.apps_task = apps_task_start(&app));
-	assert(app.rtd_task = rtd_task_start(&app));
+	assert(app.dev_task = dev_task_start(&app));
+//	assert(app.bse_task = apps_task_start(&app));
 }

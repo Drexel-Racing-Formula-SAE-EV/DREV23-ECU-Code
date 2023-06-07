@@ -12,22 +12,21 @@
 #include <stdint.h>
 #include "board/board.h"
 
-#define APPS1_MIN 502
-#define APPS1_MAX 1900
-#define APPS2_MIN 890
-#define APPS2_MAX 2105
+#define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 0
+#define BSE1_MAX 2238 //Brake emulator max: 2240 //Theoretical value (ADC max): 4095
+#define BSE2_MIN 175 //Brake emulator min: 175 //Theoretical value (ADC max): 0
+#define BSE2_MAX 2250 //Brake emulator max: 2250 //Theoretical value (ADC max): 4095
 
 struct app_data {
 	// 
 	short torque;
+	int16_t brakePercentage;
 	bool system_shutdown;
-	bool APPS_Control_flag;
+	bool rtd_flag;
 	struct board board;
 
 	TaskHandle_t dev_task;
 	TaskHandle_t apps_task;
-	TaskHandle_t canbus_task;
-	TaskHandle_t rtd_task;
 };
 
 void app_create();

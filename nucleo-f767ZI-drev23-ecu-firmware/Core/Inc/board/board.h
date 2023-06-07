@@ -1,28 +1,25 @@
-/**
- * @file board.h
- * @author Cole Bardin (cab572@drexel.edu)
- * @brief 
- * @version 0.1
- * @date 2023-04-24
- * 
- * @copyright Copyright (c) 2023
- * 
+/*
+ * board.h
+ *
+ *  Created on: Mar 13, 2023
+ *      Author: colebardin
  */
 
-#pragma once
+#ifndef INC_BOARD_BOARD_H_
+#define INC_BOARD_BOARD_H_
 
+#include <ext_drivers/pressTrans.h>
 #include "board/stm32f767.h"
-#include "ext_drivers/poten.h"
-#include "ext_drivers/canbus.h"
 
 struct board {
 	// Physical devices on the board
 	struct stm32f767_device stm32f767;
-	struct poten apps1;
-	struct poten apps2;
- 	struct canbus_device canbus_device;
+	struct pressTrans bse1;
+	struct pressTrans bse2;
 };
 
 void board_init(struct board* dev);
 
-uint16_t apps_read_count(void *arg);
+uint16_t bse_read_value (void *arg);
+
+#endif /* INC_BOARD_BOARD_H_ */
