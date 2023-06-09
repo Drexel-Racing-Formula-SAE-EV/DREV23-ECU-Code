@@ -206,9 +206,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
 	// Add the sender ID to the packet
 	rx_packet->id = rx_header.StdId;
-	// Place packet into Canbus message queue
+	// Place packet into Canbus message queue. Timeout must = 0 since this is an ISR
 	osMessageQueuePut(app.board.stm32f767.can1_mq, rx_packet, 0, 0);
 	// Notify CANBus task about received message
-	xTaskNotifyFromISR(app.canbus_task, 0x2, eSetBits, &task);
+	xTaskNotifyFromISR(app.canbus_task, CANBUS_ISR, eSetBits, &task);
 }
 /* USER CODE END 1 */

@@ -15,6 +15,9 @@
 #include "ext_drivers/poten.h"
 #include "ext_drivers/canbus.h"
 
+#define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
+#define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
+
 struct board {
 	// Physical devices on the board
 	struct stm32f767_device stm32f767;

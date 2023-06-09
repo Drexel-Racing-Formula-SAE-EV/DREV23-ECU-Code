@@ -66,7 +66,7 @@ void apps_task_fn(void *arg) {
         tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
 
         osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
-        xTaskNotify(data->canbus_task, 0x1, eSetBits);
+        xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
         osDelay(100);
     }
