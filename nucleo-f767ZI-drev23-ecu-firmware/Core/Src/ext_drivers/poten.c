@@ -18,17 +18,17 @@ void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, u
 }
 
 // Parsed from Arduino's Wiring.h
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
+long double map(long x, long in_min, long in_max, long out_min, long out_max) {
 	long in_range = in_max - in_min;
 	long out_range = out_max - out_min;
-	if (in_range == 0) return out_min + out_range / 2;
-	long num = (x - in_min) * out_range;
+	if (in_range == 0) return out_min + (long double)out_range / 2;
+	long double num = (x - in_min) * out_range;
 	if (out_range >= 0) {
-		num += in_range / 2;
+		num += (long double)in_range / 2;
 	} else {
-		num -= in_range / 2;
+		num -= (long double)in_range / 2;
 	}
-	long result = num / in_range + out_min;
+	long double result = num / (long double)in_range + out_min;
 	if (out_range >= 0) {
 		if (in_range * num < 0) return result - 1;
 	} else {
@@ -36,22 +36,21 @@ long map(long x, long in_min, long in_max, long out_min, long out_max) {
 	}
 	return result;
 }
-
-short adc_raw_to_percent(struct poten *root, uint16_t raw) {
-	short percent = (short)map(raw, root->min, root->max, 100, 0);
-	if(percent > 100){
-		return 100;
-	}else if(percent < 0){
-		return 0;
+float adc_raw_to_percent(struct poten *root, uint16_t raw) {
+	float percent = (float)map(raw, root->min, root->max, 100, 0);
+	if(percent > 100.0){
+		return 100.0;
+	}else if(percent < 0.0){
+		return 0.0;
 	}else{
 		return percent;
 	}
 }
 
-uint16_t percent_to_trq_hex(short percent){
-    if (percent > 100) percent = 100;
-    if (percent < 0) percent = 0;
-	return map(percent, 0, 100, 0x0000, 0x5555);
+uint16_t percent_to_trq_hex(float percent){
+    if (percent > 100) percent = 100.0;
+    if (percent < 0) percent = 0.0;
+    return (uint16_t)percent * 0x5555;
 }
 
 uint8_t check_implausability(short L, short R)

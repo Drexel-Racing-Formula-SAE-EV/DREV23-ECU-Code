@@ -24,11 +24,11 @@ struct poten {
 
 void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg));
 
-long map(long x, long in_min, long in_max, long out_min, long out_max);
+long double map(long x, long in_min, long in_max, long out_min, long out_max);
 
-short adc_raw_to_percent(struct poten *root, uint16_t raw);
+float adc_raw_to_percent(struct poten *root, uint16_t raw);
 
-uint16_t percent_to_trq_hex(short percent);
+uint16_t percent_to_trq_hex(float percent);
 
 uint8_t check_implausability(short L, short R);
 

@@ -34,8 +34,8 @@ void apps_task_fn(void *arg) {
     struct poten *apps2 = &data->board.apps2;
 
     uint16_t adc_raw[2];
-    short throttle_percent[2];
-    short avg_throttle;
+    float throttle_percent[2];
+    float avg_throttle;
     uint16_t torque_hex;
     canbus_packet tx_packet;
 

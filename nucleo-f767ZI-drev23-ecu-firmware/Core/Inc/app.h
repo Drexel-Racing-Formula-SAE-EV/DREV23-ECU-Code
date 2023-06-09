@@ -19,7 +19,7 @@
 
 struct app_data {
 	// 
-	short torque;
+	float torque;
 	bool system_shutdown;
 	bool rtd_flag;
 	struct board board;
