@@ -22,6 +22,9 @@
 #include "stm32f7xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cmsis_os.h"
+#include "app.h"
+#include "ext_drivers/canbus.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern struct app_data app;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -168,9 +171,9 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 
   /* USER CODE END CAN1_RX0_IRQn 0 */
-  HAL_CAN_IRQHandler(&hcan1);
+  HAL_CAN_IRQHandler(&app.board.stm32f767.hcan1);
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
-
+  //xTaskNotifyFromISR(app.canbus_task, 0x2, eSetBits, NULL);
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
@@ -189,5 +192,23 @@ void TIM7_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
+	BaseType_t task = 0;
+	canbus_packet *rx_packet = &app.board.canbus_device.rx_packet;
+	CAN_RxHeaderTypeDef rx_header;
 
+	// Clear data in rx packet
+	for (uint8_t i = 0; i < 8; i++){
+		rx_packet->data[i] = 0x00;
+	}
+
+	// Read message from CANBus line
+	HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &rx_header, rx_packet->data);
+	// Add the sender ID to the packet
+	rx_packet->id = rx_header.StdId;
+	// Place packet into Canbus message queue
+	osMessageQueuePut(app.board.stm32f767.can1_mq, rx_packet, 0, 0);
+	// Notify CANBus task about received message
+	xTaskNotifyFromISR(app.canbus_task, 0x2, eSetBits, &task);
+}
 /* USER CODE END 1 */

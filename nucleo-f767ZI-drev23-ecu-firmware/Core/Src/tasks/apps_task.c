@@ -40,11 +40,11 @@ void apps_task_fn(void *arg) {
     canbus_packet tx_packet;
 
     for (uint8_t i = 0; i < 8; i++){
-        tx_packet.tx_data[i] = 0x00;
+        tx_packet.data[i] = 0x00;
     }
 
-    tx_packet.tx_id = 0x201; // bamocar tx addr. use macros!!
-    tx_packet.tx_data[0] = 0x90; // torque cmd
+    tx_packet.id = 0x201; // bamocar tx addr. use macros!!
+    tx_packet.data[0] = 0x90; // torque cmd
 
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
@@ -62,11 +62,11 @@ void apps_task_fn(void *arg) {
         data->torque = avg_throttle;
         torque_hex = percent_to_trq_hex(avg_throttle);
 
-        tx_packet.tx_data[1] = TRQ_HEX_TO_LSB(torque_hex);
-        tx_packet.tx_data[2] = TRQ_HEX_TO_MSB(torque_hex);
+        tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);
+        tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
 
         osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
-        xTaskNotify(data->canbus_task, 0, 0);
+        xTaskNotify(data->canbus_task, 0x1, eSetBits);
 
         osDelay(100);
     }

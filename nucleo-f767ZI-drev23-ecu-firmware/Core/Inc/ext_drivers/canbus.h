@@ -17,14 +17,15 @@
 #define DATALEN 8
 
 typedef struct {
-    uint32_t tx_id;
-    uint8_t tx_data[DATALEN];
+    uint32_t id;
+    uint8_t data[DATALEN];
 } canbus_packet;
 
 struct canbus_device {
     CAN_HandleTypeDef *hcan;
     CAN_TxHeaderTypeDef *tx_header;
     uint32_t tx_mailbox;
+    canbus_packet rx_packet;
 };
 
 void canbus_device_init(struct canbus_device *dev, CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *tx_header);

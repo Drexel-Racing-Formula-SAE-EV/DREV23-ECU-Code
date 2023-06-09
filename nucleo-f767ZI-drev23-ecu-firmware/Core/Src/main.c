@@ -425,6 +425,7 @@ void MX_CAN1_Init(void)
   HAL_CAN_ConfigFilter(&hcan1, &canfil); // Initialize CAN Filter
 
   HAL_CAN_Start(&hcan1);
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
   /* USER CODE END CAN1_Init 2 */
 
 }
