@@ -6,7 +6,7 @@
  */
 
 #include <app.h>
-#include <tasks/bse_task.h>
+#include <tasks/log_task.h>
 
 #include "tasks/dev_task.h"
 
@@ -19,6 +19,6 @@ void app_create() {
 
 	board_init(&app.board);
 
-	assert(app.dev_task = dev_task_start(&app));
-//	assert(app.bse_task = apps_task_start(&app));
+//	assert(app.dev_task = dev_task_start(&app));
+	assert(app.log_task = log_task_start(&app));
 }
