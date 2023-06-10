@@ -67,6 +67,8 @@ void MX_SPI6_Init(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define SD_card_CS_Pin GPIO_PIN_4
+#define SD_card_CS_GPIO_Port GPIOE
 #define USER_Btn_Pin GPIO_PIN_13
 #define USER_Btn_GPIO_Port GPIOC
 #define Pressure_Transducer_2_Analog_Pin GPIO_PIN_3
