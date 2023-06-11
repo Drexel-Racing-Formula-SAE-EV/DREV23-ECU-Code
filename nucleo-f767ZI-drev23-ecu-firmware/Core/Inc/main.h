@@ -144,7 +144,13 @@ void MX_SPI6_Init(void);
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
+
 /* USER CODE BEGIN Private defines */
+
+//Defines added by hand
+#define SD_SPI_HANDLE hspi4
+#define SD_CS_GPIO_Port SD_card_CS_GPIO_Port
+#define SD_CS_Pin SD_card_CS_Pin
 
 /* USER CODE END Private defines */
 

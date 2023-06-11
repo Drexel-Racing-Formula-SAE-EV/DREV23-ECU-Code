@@ -24,7 +24,7 @@
 
 //It is designed to be wrapped by a cubemx generated user_diskio.c file.
 
-#include "stm32f3xx_hal.h" /* Provide the low-level HAL functions */
+#include "stm32f7xx_hal.h" /* Provide the low-level HAL functions */
 #include "user_diskio_spi.h"
 
 //Make sure you set #define SD_SPI_HANDLE as some hspix in main.h
@@ -38,8 +38,8 @@ extern SPI_HandleTypeDef SD_SPI_HANDLE;
 #define FCLK_SLOW() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_128); }	/* Set SCLK = slow, approx 280 KBits/s*/
 #define FCLK_FAST() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_8); }	/* Set SCLK = fast, approx 4.5 MBits/s */
 
-#define CS_HIGH()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_card_CS_Pin, GPIO_PIN_SET);}
-#define CS_LOW()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_card_CS_Pin, GPIO_PIN_RESET);}
+#define CS_HIGH()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);}
+#define CS_LOW()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);}
 
 /*--------------------------------------------------------------------------
 

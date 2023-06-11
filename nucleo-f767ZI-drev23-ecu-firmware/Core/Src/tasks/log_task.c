@@ -19,7 +19,7 @@ void log_task_fn(void *args)
 {
     struct app_data *data = (struct app_data *)args;
 
-	char msg[128];
+	char msg[256];
 
     while (1)
     {
