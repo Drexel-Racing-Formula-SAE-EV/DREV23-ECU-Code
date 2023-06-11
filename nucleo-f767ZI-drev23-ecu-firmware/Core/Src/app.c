@@ -6,8 +6,7 @@
  */
 
 #include <app.h>
-#include <tasks/log_task.h>
-
+#include "tasks/log_task.h"
 #include "tasks/dev_task.h"
 
 struct app_data app = {0};

@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "fatfs.h"
+
 TaskHandle_t log_task_start(struct app_data *data);
 
 #endif /* INC_TASKS_LOG_TASK_H_ */
