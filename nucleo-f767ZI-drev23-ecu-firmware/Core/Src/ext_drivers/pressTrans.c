@@ -74,6 +74,7 @@ uint8_t check_implausability(short L,
     if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
             // Prolonged Implausibililty detected, stop car
 	return 1; //TODO:  rewrite this function for BSE from prefeature APPS b
+    } else {
         	//Set RFE Low
         	return 0;
     }
