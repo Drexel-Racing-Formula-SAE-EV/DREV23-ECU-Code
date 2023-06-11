@@ -38,8 +38,8 @@ extern SPI_HandleTypeDef SD_SPI_HANDLE;
 #define FCLK_SLOW() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_128); }	/* Set SCLK = slow, approx 280 KBits/s*/
 #define FCLK_FAST() { MODIFY_REG(SD_SPI_HANDLE.Instance->CR1, SPI_BAUDRATEPRESCALER_256, SPI_BAUDRATEPRESCALER_8); }	/* Set SCLK = fast, approx 4.5 MBits/s */
 
-#define CS_HIGH()	{HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_SET);}
-#define CS_LOW()	{HAL_GPIO_WritePin(SD_CS_GPIO_Port, SD_CS_Pin, GPIO_PIN_RESET);}
+#define CS_HIGH()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_card_CS_Pin, GPIO_PIN_SET);}
+#define CS_LOW()	{HAL_GPIO_WritePin(SD_card_CS_GPIO_Port, SD_card_CS_Pin, GPIO_PIN_RESET);}
 
 /*--------------------------------------------------------------------------
 
@@ -327,7 +327,7 @@ inline DSTATUS USER_SPI_initialize (
 	if (drv != 0) return STA_NOINIT;		/* Supports only drive 0 */
 	//assume SPI already init init_spi();	/* Initialize SPI */
 
-	if (Stat & STA_NODISK) return Stat;	/* Is card existing in the soket? */
+	if (Stat & STA_NODISK) return Stat;	/* Is card existing in the socket? */
 
 	FCLK_SLOW();
 	for (n = 10; n; n--) xchg_spi(0xFF);	/* Send 80 dummy clocks */
@@ -337,7 +337,7 @@ inline DSTATUS USER_SPI_initialize (
 		SPI_Timer_On(1000);					/* Initialization timeout = 1 sec */
 		if (send_cmd(CMD8, 0x1AA) == 1) {	/* SDv2? */
 			for (n = 0; n < 4; n++) ocr[n] = xchg_spi(0xFF);	/* Get 32 bit return value of R7 resp */
-			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* Is the card supports vcc of 2.7-3.6V? */
+			if (ocr[2] == 0x01 && ocr[3] == 0xAA) {				/* Does the card support vcc of 2.7-3.6V? */
 				while (SPI_Timer_Status() && send_cmd(ACMD41, 1UL << 30)) ;	/* Wait for end of initialization with ACMD41(HCS) */
 				if (SPI_Timer_Status() && send_cmd(CMD58, 0) == 0) {		/* Check CCS bit in the OCR */
 					for (n = 0; n < 4; n++) ocr[n] = xchg_spi(0xFF);
