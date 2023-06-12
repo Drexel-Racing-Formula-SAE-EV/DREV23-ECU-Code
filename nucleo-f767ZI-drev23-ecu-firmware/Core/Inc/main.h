@@ -144,7 +144,6 @@ void MX_SPI6_Init(void);
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 
-
 /* USER CODE BEGIN Private defines */
 
 //Defines added by hand

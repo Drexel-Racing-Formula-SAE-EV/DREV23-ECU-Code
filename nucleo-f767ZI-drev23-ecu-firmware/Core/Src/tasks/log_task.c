@@ -17,14 +17,14 @@ void log_task_fn(void *args);
 TaskHandle_t log_task_start(struct app_data *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(log_task_fn, "Logging Task that writes to SD card over SPI", 128, (void *)data, tskIDLE_PRIORITY + 1, &handle);
+    xTaskCreate(log_task_fn, "Logging Task that writes to SD card over SPI", 4096, (void *)data, tskIDLE_PRIORITY + 5, &handle);
     return handle;
 }
 
 void log_task_fn(void *args)
 {
     struct app_data *data = (struct app_data *)args;
-	char msg[256];
+	char msg[128];
 	FATFS FatFs; //Fatfs handle
 	FIL fil; //File handle
 	FRESULT fres; //Result after SD card driver operations
@@ -59,7 +59,8 @@ void log_task_fn(void *args)
 
     while (1)
     {
-
+    	HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+    	osDelay(250);
     }
 
     // Get rid of unused warning for log task.

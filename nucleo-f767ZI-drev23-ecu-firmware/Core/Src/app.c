@@ -18,6 +18,7 @@ void app_create() {
 
 	board_init(&app.board);
 
-//	assert(app.dev_task = dev_task_start(&app));
 	assert(app.log_task = log_task_start(&app));
+	assert(app.dev_task = dev_task_start(&app));
+
 }
