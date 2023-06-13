@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+#define THRESH 10
+#define APPS_FREQ 100
+
 struct poten {
 	uint16_t min;
 	uint16_t max;
@@ -30,6 +33,6 @@ float adc_raw_to_percent(struct poten *root, uint16_t raw);
 
 uint16_t percent_to_trq_hex(float percent);
 
-uint8_t check_implausability(short L, short R);
+uint8_t check_implausability(float L, float R);
 
 #endif /* INC_EXT_DRIVERS_POTEN_H_ */

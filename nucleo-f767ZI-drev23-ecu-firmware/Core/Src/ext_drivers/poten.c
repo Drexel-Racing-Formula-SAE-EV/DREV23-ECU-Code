@@ -7,9 +7,6 @@
 #include <ext_drivers/poten.h>
 #include <math.h>
 
-#define THRESH 10
-#define NSAMPLES 100
-
 void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg)) {
 	poten->min = min;
 	poten->max = max;
@@ -53,11 +50,11 @@ uint16_t percent_to_trq_hex(float percent){
     return (uint16_t)percent * 0x5555;
 }
 
-uint8_t check_implausability(short L, short R)
+uint8_t check_implausability(float L, float R)
 {
     static unsigned int counts = 0;
     // Count number of reoccuring instances of torque values differing more than THRESH %
-    if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
+    if ( (fabs(L-R) > THRESH) && (++counts >= (100 / APPS_FREQ)) ){
             // Prolonged Implausibililty detected, stop car
         	//Set RFE Low
         	return 0;

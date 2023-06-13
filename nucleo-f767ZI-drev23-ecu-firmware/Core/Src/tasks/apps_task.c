@@ -56,18 +56,28 @@ void apps_task_fn(void *arg) {
         throttle_percent[0] = adc_raw_to_percent(apps1, adc_raw[0]);
         throttle_percent[1] = adc_raw_to_percent(apps2, adc_raw[1]);
 
-        // TODO: Check plausibilty
+        if(!check_implausability(throttle_percent[0], throttle_percent[1])){
+            // If plausibility check fails, set flag until soft reset
+        	data->rtd_flag = true;
+        }
 
         avg_throttle = (throttle_percent[0] + throttle_percent[1]) / 2;
         data->torque = avg_throttle;
         torque_hex = percent_to_trq_hex(avg_throttle);
 
-        tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);
-        tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
+        if(data->rtd_flag == false){
+            // When flag is not set, send normal torque command
+            tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);
+            tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
+        }else{
+            // If implausibility is detected, send 0 torque command 
+            tx_packet.data[1] = 0x00;
+            tx_packet.data[2] = 0x00;
+        }
 
         osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
         xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
-        osDelay(100);
+        osDelayUntil(osKernelGetTickCount() + ( 1000 / APPS_FREQ));
     }
 }
