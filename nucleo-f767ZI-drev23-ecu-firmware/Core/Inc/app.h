@@ -17,6 +17,9 @@
 #define APPS2_MIN 890
 #define APPS2_MAX 2105
 
+#define BAMOCAR_CANBUS_RXID 0x201
+#define BAMOCAR_CANBUS_TORQUE_CMD 0x90
+
 struct app_data {
 	// 
 	float torque;

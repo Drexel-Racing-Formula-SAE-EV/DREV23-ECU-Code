@@ -38,21 +38,30 @@ void apps_task_fn(void *arg) {
     float avg_throttle;
     uint16_t torque_hex;
     canbus_packet tx_packet;
+    uint32_t entryTicksCount;
 
+    // Initialize all CANBus data values to 0
     for (uint8_t i = 0; i < 8; i++){
         tx_packet.data[i] = 0x00;
     }
 
-    tx_packet.id = 0x201; // bamocar tx addr. use macros!!
-    tx_packet.data[0] = 0x90; // torque cmd
+    // Set CANBus Receiving ID in header
+    tx_packet.id = BAMOCAR_CANBUS_RXID;
+    // Set the command identifier to be Torque Command
+    tx_packet.data[0] = BAMOCAR_CANBUS_TORQUE_CMD;
 
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
     while (1)
     {
+        // Record number of ticks at entry of each loop 
+        entryTicksCount = osKernelGetTickCount();
+
+        // Read APPS potentiometers
         adc_raw[0] = apps1->read_count((void *)apps1);
         adc_raw[1] = apps2->read_count((void *)apps2);
 
+        // Convert to a floating point percentage
         throttle_percent[0] = adc_raw_to_percent(apps1, adc_raw[0]);
         throttle_percent[1] = adc_raw_to_percent(apps2, adc_raw[1]);
 
@@ -61,8 +70,10 @@ void apps_task_fn(void *arg) {
         	data->rtd_flag = true;
         }
 
+        // Average throttle percents
         avg_throttle = (throttle_percent[0] + throttle_percent[1]) / 2;
         data->torque = avg_throttle;
+        // Convert to hex number for Bamocar register value
         torque_hex = percent_to_trq_hex(avg_throttle);
 
         if(data->rtd_flag == false){
@@ -75,9 +86,11 @@ void apps_task_fn(void *arg) {
             tx_packet.data[2] = 0x00;
         }
 
+        // Put torque packet in the queue and notify CANBus task
         osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
         xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
-        osDelayUntil(osKernelGetTickCount() + ( 1000 / APPS_FREQ));
+        // Delay such that this task will occur at exactly desired frequency
+        osDelayUntil(entryTicksCount + (1000 / APPS_FREQ));
     }
 }
