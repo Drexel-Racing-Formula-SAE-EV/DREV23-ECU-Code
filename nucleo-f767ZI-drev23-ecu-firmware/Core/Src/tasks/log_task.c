@@ -17,7 +17,7 @@ void log_task_fn(void *args);
 TaskHandle_t log_task_start(struct app_data *data)
 {
     TaskHandle_t handle;
-    xTaskCreate(log_task_fn, "Logging Task that writes to SD card over SPI", 4096, (void *)data, tskIDLE_PRIORITY + 5, &handle);
+    xTaskCreate(log_task_fn, "Logging Task that writes to SD card over SPI", 4096, (void *)data, 8, &handle);
     return handle;
 }
 
