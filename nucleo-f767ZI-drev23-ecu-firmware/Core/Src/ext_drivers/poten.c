@@ -1,8 +1,12 @@
-/*
- * poten.c
- *
- *  Created on: Mar 14, 2023
- *      Author: colebardin
+/**
+ * @file poten.c
+ * @author Cole Bardin (cab572@drexel.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-14
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 #include <ext_drivers/poten.h>
 #include <math.h>
