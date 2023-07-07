@@ -12,10 +12,10 @@
 #include <stdint.h>
 #include "board/board.h"
 
-#define APPS1_MIN 502
+#define APPS1_MIN 339
 #define APPS1_MAX 1900
-#define APPS2_MIN 890
-#define APPS2_MAX 2105
+#define APPS2_MIN 810
+#define APPS2_MAX 2158
 
 #define BAMOCAR_CANBUS_RXID 0x201
 #define BAMOCAR_CANBUS_TORQUE_CMD 0x90
