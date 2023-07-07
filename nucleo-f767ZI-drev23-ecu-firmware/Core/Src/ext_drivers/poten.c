@@ -62,9 +62,7 @@ uint8_t check_implausability(float L, float R){
 		counts++;
 
 		// If there are consecutive errors for more than 100ms, error
-		if(counts >= (APPS_FREQ / 10)){
-			return 0;
-		}
+		return counts <= (APPS_FREQ / 10);
 	}else{
 		// If potentiometers are within spec, reset count
 		counts = 0;
