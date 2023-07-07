@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 #define THRESH 10
-#define APPS_FREQ 100
+#define APPS_FREQ 200
 
 struct poten {
 	uint16_t min;
