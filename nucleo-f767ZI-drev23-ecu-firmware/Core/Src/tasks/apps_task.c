@@ -53,8 +53,7 @@ void apps_task_fn(void *arg) {
 
     osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
-    while (1)
-    {
+    while (1){
         // Record number of ticks at entry of each loop 
         entryTicksCount = osKernelGetTickCount();
 
@@ -66,7 +65,6 @@ void apps_task_fn(void *arg) {
             // Convert to a floating point percentage
             throttle_percent[0] = adc_raw_to_percent(apps1, adc_raw[0]);
             throttle_percent[1] = adc_raw_to_percent(apps2, adc_raw[1]);
-
             if(!check_implausability(throttle_percent[0], throttle_percent[1])){
                 // If plausibility check fails, set flag until soft reset
                 data->rtd_flag = true;
@@ -85,6 +83,7 @@ void apps_task_fn(void *arg) {
             tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
         }else{
             // If implausibility is detected, send 0 torque command 
+        	data->torque = 0;
             tx_packet.data[1] = 0x00;
             tx_packet.data[2] = 0x00;
         }
