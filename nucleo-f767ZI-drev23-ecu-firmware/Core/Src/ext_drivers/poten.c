@@ -50,16 +50,21 @@ uint16_t percent_to_trq_hex(float percent){
     return (uint16_t)percent * 0x5555;
 }
 
-uint8_t check_implausability(float L, float R)
-{
+uint8_t check_implausability(float L, float R){
     static unsigned int counts = 0;
-    // Count number of reoccuring instances of torque values differing more than THRESH %
-    if ( (fabs(L-R) > THRESH) && (++counts >= (100 / APPS_FREQ)) ){
-            // Prolonged Implausibililty detected, stop car
-        	//Set RFE Low
-        	return 0;
-    }
-	counts = 0;
-	return 1;
+
+	// Check if APPS1 and APPS2 are more than 10% different
+	if(fabs(L - R) > THRESH){
+		counts++;
+
+		// If there are consecutive errors for more than 100ms, error
+		if(counts >= (APPS_FREQ / 10)){
+			return 0;
+		}
+	}else{
+		// If potentiometers are within spec, reset count
+		counts = 0;
+		return 1;
+	}
 }
 
