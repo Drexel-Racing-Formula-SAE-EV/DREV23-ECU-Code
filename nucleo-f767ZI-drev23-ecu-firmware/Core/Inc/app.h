@@ -12,14 +12,24 @@
 #include <stdint.h>
 #include "board/board.h"
 
+#define APPS1_MIN 339
+#define APPS1_MAX 1900
+#define APPS2_MIN 810
+#define APPS2_MAX 2158
+
+#define BAMOCAR_CANBUS_RXID 0x201
+#define BAMOCAR_CANBUS_TORQUE_CMD 0x90
+
 struct app_data {
 	// 
-	short torque;
+	float torque;
 	bool system_shutdown;
 	bool rtd_flag;
 	struct board board;
 
 	TaskHandle_t dev_task;
+	TaskHandle_t apps_task;
+	TaskHandle_t canbus_task;
 };
 
 void app_create();

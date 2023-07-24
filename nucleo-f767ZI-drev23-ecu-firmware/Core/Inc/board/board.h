@@ -1,20 +1,31 @@
-/*
- * board.h
- *
- *  Created on: Mar 13, 2023
- *      Author: colebardin
+/**
+ * @file board.h
+ * @author Cole Bardin (cab572@drexel.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-04-24
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
-#ifndef INC_BOARD_BOARD_H_
-#define INC_BOARD_BOARD_H_
+#pragma once
 
 #include "board/stm32f767.h"
+#include "ext_drivers/poten.h"
+#include "ext_drivers/canbus.h"
+
+#define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
+#define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
 
 struct board {
 	// Physical devices on the board
 	struct stm32f767_device stm32f767;
+	struct poten apps1;
+	struct poten apps2;
+ 	struct canbus_device canbus_device;
 };
 
 void board_init(struct board* dev);
 
-#endif /* INC_BOARD_BOARD_H_ */
+uint16_t apps_read_count(void *arg);

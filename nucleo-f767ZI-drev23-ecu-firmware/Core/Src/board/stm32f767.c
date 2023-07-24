@@ -7,6 +7,7 @@
 
 #include <board/stm32f767.h>
 #include "main.h"
+#include "ext_drivers/canbus.h"
 
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
@@ -58,7 +59,8 @@ const osMutexAttr_t uart3_mutex_attr = {
 	.cb_size = 0UL,
 };
 
-void stm32f767_init(struct stm32f767_device *dev) {
+void stm32f767_init(struct stm32f767_device *dev)
+{
 	MX_GPIO_Init();
 	MX_USART3_UART_Init();
 	MX_ADC1_Init();
@@ -75,6 +77,7 @@ void stm32f767_init(struct stm32f767_device *dev) {
 	dev->hadc3 = hadc3;
 
 	dev->hcan1 = hcan1;
+	dev->can1_mq = osMessageQueueNew(128, sizeof(canbus_packet), NULL);
 
 	dev->hi2c2 = hi2c2;
 
@@ -85,19 +88,18 @@ void stm32f767_init(struct stm32f767_device *dev) {
 
 	dev->huart3 = huart3;
 
-	dev->can1_mutex = osMutexCreate(&can1_mutex_attr);
+	dev->can1_mutex = osMutexNew(&can1_mutex_attr);
 	assert(dev->can1_mutex);
 
-	dev->i2c2_mutex = osMutexCreate(&i2c2_mutex_attr);
+	dev->i2c2_mutex = osMutexNew(&i2c2_mutex_attr);
 	assert(dev->i2c2_mutex);
 
-	dev->spi4_mutex = osMutexCreate(&spi4_mutex_attr);
+	dev->spi4_mutex = osMutexNew(&spi4_mutex_attr);
 	assert(dev->spi4_mutex);
 
-	dev->spi6_mutex = osMutexCreate(&spi6_mutex_attr);
+	dev->spi6_mutex = osMutexNew(&spi6_mutex_attr);
 	assert(dev->spi6_mutex);
 
-	dev->uart3_mutex = osMutexCreate(&uart3_mutex_attr);
+	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
 }
-

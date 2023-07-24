@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2023 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -55,10 +55,8 @@ SPI_HandleTypeDef hspi6;
 
 UART_HandleTypeDef huart3;
 
-/* Definitions for defaultTask */
-
 /* USER CODE BEGIN PV */
-
+CAN_TxHeaderTypeDef can1_txheader;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -137,7 +135,6 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
-
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -162,7 +159,6 @@ void SystemClock_Config(void)
   /** Configure LSE Drive Capability
   */
   HAL_PWR_EnableBkUpAccess();
-  __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
   /** Configure the main internal regulator output voltage
   */
@@ -172,9 +168,8 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 4;
@@ -383,7 +378,7 @@ void MX_CAN1_Init(void)
 {
 
   /* USER CODE BEGIN CAN1_Init 0 */
-
+  CAN_FilterTypeDef canfil; // CAN Bus Filter
   /* USER CODE END CAN1_Init 0 */
 
   /* USER CODE BEGIN CAN1_Init 1 */
@@ -406,7 +401,29 @@ void MX_CAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN1_Init 2 */
+  can1_txheader.DLC = 3; // Number of bites to be transmitted max- 8
+  can1_txheader.IDE = CAN_ID_STD;
+  can1_txheader.ExtId = 0;
+  can1_txheader.RTR = CAN_RTR_DATA;
 
+  can1_txheader.StdId = 0x201; // 0x201
+  can1_txheader.TransmitGlobalTime = DISABLE;
+
+  canfil.FilterBank = 0;
+  canfil.FilterMode = CAN_FILTERMODE_IDMASK;
+  canfil.FilterFIFOAssignment = CAN_RX_FIFO0;
+  canfil.FilterIdHigh = 0;
+  canfil.FilterIdLow = 0;
+  canfil.FilterMaskIdHigh = 0;
+  canfil.FilterMaskIdLow = 0;
+  canfil.FilterScale = CAN_FILTERSCALE_32BIT;
+  canfil.FilterActivation = ENABLE;
+  canfil.SlaveStartFilterBank = 14;
+
+  HAL_CAN_ConfigFilter(&hcan1, &canfil); // Initialize CAN Filter
+
+  HAL_CAN_Start(&hcan1);
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
   /* USER CODE END CAN1_Init 2 */
 
 }
@@ -651,6 +668,8 @@ void MX_USART3_UART_Init(void)
 void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOE_CLK_ENABLE();
@@ -756,6 +775,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_VBUS_GPIO_Port, &GPIO_InitStruct);
 
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */

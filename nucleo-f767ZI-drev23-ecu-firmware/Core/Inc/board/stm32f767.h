@@ -17,6 +17,7 @@ struct stm32f767_device {
 	ADC_HandleTypeDef hadc3;
 
 	CAN_HandleTypeDef hcan1;
+	CAN_TxHeaderTypeDef can1_txheader;
 
 	I2C_HandleTypeDef hi2c2;
 
@@ -32,7 +33,7 @@ struct stm32f767_device {
 	osMutexId_t spi4_mutex;
 	osMutexId_t spi6_mutex;
 	osMutexId_t	uart3_mutex;
-
+	osMessageQueueId_t can1_mq;
 };
 
 void stm32f767_init(struct stm32f767_device *dev);
