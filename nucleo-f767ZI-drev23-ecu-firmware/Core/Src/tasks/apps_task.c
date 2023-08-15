@@ -63,9 +63,9 @@ void apps_task_fn(void *arg) {
             adc_raw[1] = apps2->read_count((void *)apps2);
 
             // Convert to a floating point percentage
-            throttle_percent[0] = adc_raw_to_percent(apps1, adc_raw[0]);
-            throttle_percent[1] = adc_raw_to_percent(apps2, adc_raw[1]);
-            if(!check_implausability(throttle_percent[0], throttle_percent[1])){
+            throttle_percent[0] = poten_raw_to_percent(apps1, adc_raw[0]);
+            throttle_percent[1] = poten_raw_to_percent(apps2, adc_raw[1]);
+            if(!poten_check_implausability(throttle_percent[0], throttle_percent[1])){
                 // If plausibility check fails, set flag until soft reset
                 data->rtd_flag = true;
                 // Set RFE low, disable motor

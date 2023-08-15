@@ -55,13 +55,13 @@ SPI_HandleTypeDef hspi6;
 
 UART_HandleTypeDef huart3;
 
+/* Definitions for defaultTask */
 /* USER CODE BEGIN PV */
 CAN_TxHeaderTypeDef can1_txheader;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void StartDefaultTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 

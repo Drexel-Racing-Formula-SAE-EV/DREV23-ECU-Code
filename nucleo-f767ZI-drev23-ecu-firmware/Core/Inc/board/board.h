@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include <ext_drivers/pressTrans.h>
 #include "board/stm32f767.h"
 #include "ext_drivers/poten.h"
 #include "ext_drivers/canbus.h"
@@ -21,6 +22,8 @@
 struct board {
 	// Physical devices on the board
 	struct stm32f767_device stm32f767;
+	struct pressTrans bse1;
+	struct pressTrans bse2;
 	struct poten apps1;
 	struct poten apps2;
  	struct canbus_device canbus_device;
@@ -29,3 +32,5 @@ struct board {
 void board_init(struct board* dev);
 
 uint16_t apps_read_count(void *arg);
+uint16_t bse_read_value (void *arg);
+

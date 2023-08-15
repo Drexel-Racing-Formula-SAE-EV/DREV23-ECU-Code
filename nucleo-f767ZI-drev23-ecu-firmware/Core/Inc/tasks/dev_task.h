@@ -10,7 +10,12 @@
 
 #include "cmsis_os.h"
 #include "app.h"
+#include <stdio.h>
+#include <string.h>
+#include "ext_drivers/pressTrans.h"
 
 TaskHandle_t dev_task_start(struct app_data *data);
+
+uint8_t switch_to_defined_channel (struct pressTrans *root);
 
 #endif /* INC_TASKS_DEV_TASK_H_ */

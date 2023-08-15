@@ -27,12 +27,10 @@ struct poten {
 
 void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg));
 
-long double map(long x, long in_min, long in_max, long out_min, long out_max);
-
-float adc_raw_to_percent(struct poten *root, uint16_t raw);
+float poten_raw_to_percent(struct poten *root, uint16_t raw);
 
 uint16_t percent_to_trq_hex(float percent);
 
-uint8_t check_implausability(float L, float R);
+uint8_t poten_check_implausability(float L, float R);
 
 #endif /* INC_EXT_DRIVERS_POTEN_H_ */

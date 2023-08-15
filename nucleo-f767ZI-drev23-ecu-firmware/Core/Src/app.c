@@ -6,8 +6,10 @@
  */
 
 #include "app.h"
+#include <tasks/bse_task.h>
 
 #include "tasks/dev_task.h"
+#include "tasks/bse_task.h"
 #include "tasks/apps_task.h"
 #include "tasks/canbus_task.h"
 
@@ -22,5 +24,6 @@ void app_create() {
 
 	//assert(app.dev_task = dev_task_start(&app));
 	assert(app.canbus_task = canbus_task_start(&app));
+	assert(app.bse_task = bse_task_start(&app));
 	assert(app.apps_task = apps_task_start(&app));
 }
