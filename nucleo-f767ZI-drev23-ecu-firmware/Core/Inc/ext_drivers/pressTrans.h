@@ -16,7 +16,7 @@ struct pressTrans {
 	uint16_t max;
 
 	uint16_t raw_value;
-	short percent;
+	float percent;
 
 	void *handle; //ADC handle goes here
 	uint32_t channelNum; //ADC channel number
@@ -39,12 +39,11 @@ long map(long x,
 		long out_max
 		);
 
-short adc_raw_to_percent(struct pressTrans *root,
-		uint16_t raw);
+float adc_raw_to_percent(struct pressTrans *root, uint16_t raw);
 
 uint16_t percent_to_trq_hex(short percent);
 
-uint8_t check_implausability(short L,
-		short R);
+uint8_t check_implausability(short L, short R);
 
+uint8_t switch_to_defined_channel (struct pressTrans *root);
 #endif /* INC_EXT_DRIVERS_PRESSTRANS_H_ */

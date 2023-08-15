@@ -49,14 +49,13 @@ long map(long x,
 	return result;
 }
 
-short adc_raw_to_percent(struct pressTrans *root, uint16_t raw) {
-//	short percent = (short)map(raw, root->min, root->max, 100, 0);
-	short percent = (short)map(raw, root->min, root->max, 0, 100);
-	if ( percent > 100 ){
-		return 100;
-	} else if ( percent < 0 ){
-		return 0;
-	} else {
+float adc_raw_to_percent(struct pressTrans *root, uint16_t raw) {
+	float percent = (float)map(raw, root->min, root->max, 0, 100);
+	if(percent > 100.0){
+		return 100.0;
+	}else if(percent < 0.0){
+		return 0.0;
+	}else{
 		return percent;
 	}
 }
@@ -78,6 +77,7 @@ uint8_t check_implausability(short L,
         	return 0;
     }
 	counts = 0;
+	return 1;
 }
 
 uint8_t switch_to_defined_channel (struct pressTrans *root){

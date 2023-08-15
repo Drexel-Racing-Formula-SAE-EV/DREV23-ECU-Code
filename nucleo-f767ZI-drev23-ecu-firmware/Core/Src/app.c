@@ -9,6 +9,7 @@
 #include <tasks/bse_task.h>
 
 #include "tasks/dev_task.h"
+#include "tasks/bse_task.h"
 
 struct app_data app = {0};
 
@@ -19,6 +20,6 @@ void app_create() {
 
 	board_init(&app.board);
 
-	assert(app.dev_task = dev_task_start(&app));
-//	assert(app.bse_task = apps_task_start(&app));
+	//assert(app.dev_task = dev_task_start(&app));
+	assert(app.bse_task = bse_task_start(&app));
 }
