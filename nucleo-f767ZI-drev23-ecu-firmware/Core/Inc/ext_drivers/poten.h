@@ -10,27 +10,25 @@
 
 #include <stdint.h>
 
-#define THRESH 10
-#define APPS_FREQ 200
 
 struct poten {
 	uint16_t min;
 	uint16_t max;
 
 	uint16_t count;
-	short percent;
+	float percent;
 
 	void *handle;
 
-	uint16_t(*read_count)(void *arg);
+	uint16_t(*read_count)(void *hadc);
 };
 
-void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg));
+void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *hadc));
 
-float poten_raw_to_percent(struct poten *root, uint16_t raw);
+float potenGetPercent(struct poten *root);
 
 uint16_t percent_to_trq_hex(float percent);
 
-uint8_t poten_check_implausability(float L, float R);
+uint8_t poten_check_implausability(float L, float R, int thresh, int count);
 
 #endif /* INC_EXT_DRIVERS_POTEN_H_ */

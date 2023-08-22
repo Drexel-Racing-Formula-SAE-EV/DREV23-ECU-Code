@@ -31,6 +31,4 @@ struct board {
 
 void board_init(struct board* dev);
 
-uint16_t apps_read_count(void *arg);
-uint16_t bse_read_value (void *arg);
-
+uint16_t ADC_read_count(void *hadc);

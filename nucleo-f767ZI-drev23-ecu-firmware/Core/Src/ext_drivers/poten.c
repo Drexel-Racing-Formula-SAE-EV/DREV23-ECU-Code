@@ -19,8 +19,8 @@ void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, u
 	poten->read_count = read_count;
 }
 
-float poten_raw_to_percent(struct poten *root, uint16_t raw) {
-	float percent = (float)map(raw, root->min, root->max, 100, 0);
+float potenGetPercent(struct poten *root) {
+	float percent = (float)map(root->count, root->min, root->max, 100, 0);
 	if(percent > 100.0){
 		return 100.0;
 	}else if(percent < 0.0){
@@ -36,15 +36,15 @@ uint16_t percent_to_trq_hex(float percent){
     return (uint16_t)percent * 0x5555;
 }
 
-uint8_t poten_check_implausability(float L, float R){
+uint8_t poten_check_implausability(float L, float R, int thresh, int count){
     static unsigned int counts = 0;
 
 	// Check if APPS1 and APPS2 are more than 10% different
-	if(fabs(L - R) > THRESH){
+	if(fabs(L - R) > thresh){
 		counts++;
 
 		// If there are consecutive errors for more than 100ms, error
-		return counts <= (APPS_FREQ / 10);
+		return counts <= count;
 	}else{
 		// If potentiometers are within spec, reset count
 		counts = 0;

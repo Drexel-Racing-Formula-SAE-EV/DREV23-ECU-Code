@@ -15,20 +15,20 @@ struct pressTrans {
 	uint16_t min;
 	uint16_t max;
 
-	uint16_t raw_value;
+	uint16_t count;
 	float percent;
 
 	void *handle; //ADC handle goes here
 	uint32_t channelNum; //ADC channel number
 
-	uint16_t(*read_count)(void *arg); //this is a function pointer in C, kinda weird ain't it.
+	uint16_t(*read_count)(void *hadc); //this is a function pointer in C, kinda weird ain't it.
 };
 
-void pressTrans_init(struct pressTrans *pressTrans, uint16_t min, uint16_t max, void *handle, uint8_t channelNum, uint16_t(*read_count)(void *arg));
+void pressTrans_init(struct pressTrans *pressTrans, uint16_t min, uint16_t max, void *handle, uint8_t channelNum, uint16_t(*read_count)(void *hadc));
 
-float presstrans_raw_to_percent(struct pressTrans *root, uint16_t raw);
+float presstransGetPercent(struct pressTrans *root);
 
-uint8_t presstrans_check_implausability(short L, short R);
+uint8_t presstrans_check_implausability(float L, float R, int thresh, int count);
 
 uint8_t switch_to_defined_channel (struct pressTrans *root);
 #endif /* INC_EXT_DRIVERS_PRESSTRANS_H_ */

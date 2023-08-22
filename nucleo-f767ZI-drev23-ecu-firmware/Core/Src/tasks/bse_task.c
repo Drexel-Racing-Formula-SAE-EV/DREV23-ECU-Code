@@ -10,6 +10,7 @@
 */
 
 #include <tasks/bse_task.h>
+#include "main.h"
 
 /**
 * @brief Actual BSE task function
@@ -30,17 +31,29 @@ void bse_task_fn(void *arg){
     struct pressTrans *bse1 = &data->board.bse1;
     struct pressTrans *bse2 = &data->board.bse2;
 
-	while (1){
-		/* digitize the analog signal of the Brake pressure Transducers*/
-		switch_to_defined_channel(bse1);
-		bse1->raw_value = bse1->read_count((void *)bse1);
-		osDelay(50); //TODO: this is needed here, please find out why
-		switch_to_defined_channel(bse2);
-		bse2->raw_value = bse2->read_count((void *)bse2);
+    uint32_t entryTicksCount;
 
-		bse1->percent = presstrans_raw_to_percent(bse1, bse1->raw_value);
-		bse2->percent = presstrans_raw_to_percent(bse2, bse2->raw_value);
+	while (1){
+		entryTicksCount = osKernelGetTickCount();
+
+		// Read ADC channels for each BSE input
+		switch_to_defined_channel(bse1);
+		bse1->count = bse1->read_count(bse1->handle);
+		switch_to_defined_channel(bse2);
+		bse2->count = bse2->read_count(bse2->handle);
+
+		// Calculate Percentage
+		bse1->percent = presstransGetPercent(bse1);
+		bse2->percent = presstransGetPercent(bse2);
+
+		// Check for error in readings
+		if(!presstrans_check_implausability(bse1->percent, bse2->percent, THRESH, BSE_FREQ / 10)){
+			data->bse_fault_flag = true;
+			HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
+		}
+		// Set average value
 		data->brakePercentage = (bse1->percent + bse2->percent) / 2;
-		osDelay(50);
+
+		osDelayUntil(entryTicksCount + (1000 / BSE_FREQ));
 	}
 }

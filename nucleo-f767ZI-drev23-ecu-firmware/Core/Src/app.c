@@ -16,7 +16,8 @@
 struct app_data app = {0};
 
 void app_create() {
-	app.rtd_flag = false;
+	app.apps_fault_flag = false;
+	app.bse_fault_flag = false;
 	app.system_shutdown = false;
 	app.torque = 0;
 

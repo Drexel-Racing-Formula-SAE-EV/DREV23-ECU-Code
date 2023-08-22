@@ -12,6 +12,10 @@
 #include <stdint.h>
 #include "board/board.h"
 
+#define THRESH 10
+#define APPS_FREQ 200
+#define BSE_FREQ 50
+
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
 #define BSE1_MAX 2238 //Brake emulator max: 2240 //Theoretical value (ADC max): 1900
@@ -32,7 +36,8 @@ struct app_data {
 	float torque;
 	float brakePercentage;
 	bool system_shutdown;
-	bool rtd_flag;
+	bool apps_fault_flag;
+	bool bse_fault_flag;
 	struct board board;
 
 	TaskHandle_t dev_task;

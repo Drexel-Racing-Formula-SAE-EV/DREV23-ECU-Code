@@ -34,9 +34,6 @@ void apps_task_fn(void *arg) {
     struct poten *apps1 = &data->board.apps1;
     struct poten *apps2 = &data->board.apps2;
 
-    uint16_t adc_raw[2];
-    float throttle_percent[2];
-    float avg_throttle;
     uint16_t torque_hex;
     canbus_packet tx_packet;
     uint32_t entryTicksCount;
@@ -57,26 +54,25 @@ void apps_task_fn(void *arg) {
         // Record number of ticks at entry of each loop 
         entryTicksCount = osKernelGetTickCount();
 
-        if(data->rtd_flag == false){
+        if(data->apps_fault_flag == false && data->bse_fault_flag == false){
             // Read APPS potentiometers
-            adc_raw[0] = apps1->read_count((void *)apps1);
-            adc_raw[1] = apps2->read_count((void *)apps2);
+            apps1->count = apps1->read_count(apps1->handle);
+            apps2->count = apps2->read_count(apps2->handle);
 
             // Convert to a floating point percentage
-            throttle_percent[0] = poten_raw_to_percent(apps1, adc_raw[0]);
-            throttle_percent[1] = poten_raw_to_percent(apps2, adc_raw[1]);
-            if(!poten_check_implausability(throttle_percent[0], throttle_percent[1])){
+            apps1->percent = potenGetPercent(apps1);
+            apps1->percent = potenGetPercent(apps2);
+            if(!poten_check_implausability(apps1->percent, apps2->percent, THRESH, APPS_FREQ / 10)){
                 // If plausibility check fails, set flag until soft reset
-                data->rtd_flag = true;
+                data->apps_fault_flag = true;
                 // Set RFE low, disable motor
                 HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
             }
 
             // Average throttle percents
-            avg_throttle = (throttle_percent[0] + throttle_percent[1]) / 2;
-            data->torque = avg_throttle;
+            data->torque = (apps1->percent + apps2->percent) / 2;
             // Convert to hex number for Bamocar register value
-            torque_hex = percent_to_trq_hex(avg_throttle);
+            torque_hex = percent_to_trq_hex(data->torque);
 
             // When flag is not set, send normal torque command
             tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);

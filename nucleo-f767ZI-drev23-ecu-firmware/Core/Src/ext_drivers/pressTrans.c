@@ -26,8 +26,8 @@ void pressTrans_init(struct pressTrans *pressTrans,
 	pressTrans->read_count = read_count;
 }
 
-float presstrans_raw_to_percent(struct pressTrans *root, uint16_t raw) {
-	float percent = (float)map(raw, root->min, root->max, 0, 100);
+float presstransGetPercent(struct pressTrans *root) {
+	float percent = (float)map(root->count, root->min, root->max, 0, 100);
 	if(percent > 100.0){
 		return 100.0;
 	}else if(percent < 0.0){
@@ -37,19 +37,23 @@ float presstrans_raw_to_percent(struct pressTrans *root, uint16_t raw) {
 	}
 }
 
-uint8_t presstrans_check_implausability(short L,
-							short R){
+uint8_t presstrans_check_implausability(float L, float R, int thresh, int count){
     static unsigned int counts = 0;
-    // Count number of reoccuring instances of torque values differing more than THRESH %
-    if ( (fabs(L-R) > THRESH) && (++counts >= NSAMPLES) ){
-            // Prolonged Implausibililty detected, stop car
-	return 1; //TODO:  rewrite this function for BSE from prefeature APPS b
-        	//Set RFE Low
-        	return 0;
-    }
-	counts = 0;
-	return 1;
+
+	// Check if APPS1 and APPS2 are more than 10% different
+	if(fabs(L - R) > thresh){
+		counts++;
+
+		// If there are consecutive errors for more than 100ms, error
+		return counts <= count;
+	}else{
+		// If potentiometers are within spec, reset count
+		counts = 0;
+		return 1;
+	}
 }
+
+
 
 uint8_t switch_to_defined_channel (struct pressTrans *root){
 	//TODO: add code here from the prefeature APPS branch
