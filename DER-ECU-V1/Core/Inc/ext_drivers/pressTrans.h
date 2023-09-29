@@ -1,12 +1,15 @@
-/*
- * pressTrans.h
- *
- *  Created on: April 24, 2023
- *      Author: Benedict Hofmockel
- */
+/**
+* @file pressTrans.h
+* @author Cole Bardin (cab572@drexel.edu) & Benedict Hofmockel
+* @brief
+* @version 0.1
+* @date 2023-04-24
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
-#ifndef INC_EXT_DRIVERS_PRESSTRANS_H_
-#define INC_EXT_DRIVERS_PRESSTRANS_H_
+#pragma once
 
 #include <stdint.h>
 #include <stm32f7xx_hal.h>
@@ -31,4 +34,3 @@ float presstransGetPercent(struct pressTrans *root);
 uint8_t presstransCheckImplausability(float L, float R, int thresh, int count);
 
 uint8_t switchChannelADC (struct pressTrans *root);
-#endif /* INC_EXT_DRIVERS_PRESSTRANS_H_ */

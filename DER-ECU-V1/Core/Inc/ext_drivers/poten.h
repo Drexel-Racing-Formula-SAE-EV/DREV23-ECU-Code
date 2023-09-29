@@ -1,15 +1,17 @@
-/*
- * poten.h
- *
- *  Created on: Mar 14, 2023
- *      Author: colebardin
+/**
+ * @file poten.h
+ * @author Cole Bardin (cab572@drexel.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-03-14
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
-#ifndef INC_EXT_DRIVERS_POTEN_H_
-#define INC_EXT_DRIVERS_POTEN_H_
+#pragma once
 
 #include <stdint.h>
-
 
 struct poten {
 	uint16_t min;
@@ -30,5 +32,3 @@ float potenGetPercent(struct poten *root);
 uint16_t percentToThrottleHex(float percent);
 
 uint8_t potenCheckImplausability(float L, float R, int thresh, int count);
-
-#endif /* INC_EXT_DRIVERS_POTEN_H_ */

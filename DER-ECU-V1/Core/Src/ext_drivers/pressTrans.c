@@ -1,21 +1,20 @@
-/*
- * pressTrans.c
- *
- *  Created on: Apr 24, 2023
- *      Author: Benedict Hofmockel
- */
-#include <ext_drivers/pressTrans.h>
-#include <ext_drivers/map.h>
-#include <math.h>
+/**
+* @file pressTrans.c
+* @author Cole Bardin (cab572@drexel.edu) & Benedict Hofmockel
+* @brief
+* @version 0.1
+* @date 2023-04-24
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
-//#include "main.h" //added because switch Channel function
+#include "ext_drivers/pressTrans.h"
+#include "ext_drivers/map.h"
+#include "math.h"
 
-void pressTrans_init(struct pressTrans *pressTrans,
-					uint16_t min,
-					uint16_t max,
-					void *handle,
-					uint8_t channelNum,
-					uint16_t(*read_count)(void *arg)) {
+
+void pressTrans_init(struct pressTrans *pressTrans, uint16_t min, uint16_t max, void *handle, uint8_t channelNum, uint16_t(*read_count)(void *arg)) {
 	pressTrans->min = min;
 	pressTrans->max = max;
 	pressTrans->handle = handle;

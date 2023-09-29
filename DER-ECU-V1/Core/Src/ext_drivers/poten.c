@@ -8,9 +8,10 @@
  * @copyright Copyright (c) 2023
  * 
  */
-#include <ext_drivers/poten.h>
-#include <ext_drivers/map.h>
+
 #include <math.h>
+#include "ext_drivers/poten.h"
+#include "ext_drivers/map.h"
 
 void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, uint16_t(*read_count)(void *arg)) {
 	poten->min = min;

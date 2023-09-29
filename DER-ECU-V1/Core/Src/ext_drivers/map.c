@@ -1,3 +1,14 @@
+/**
+* @file map.c 
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-03-13
+*
+* @copyright Copyright (c) 2023
+*
+*/
+
 #include "ext_drivers/map.h"
 
 // Parsed from Arduino's Wiring.h

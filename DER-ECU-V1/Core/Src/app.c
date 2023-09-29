@@ -21,7 +21,7 @@
 
 struct app_data app = {0};
 
-void app_create() {
+void app_create() {g
 	app.rtdFlag = false;
 
 	app.hardSystemFault = false;
