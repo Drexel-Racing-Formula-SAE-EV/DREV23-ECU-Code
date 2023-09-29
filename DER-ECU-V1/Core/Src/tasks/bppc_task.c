@@ -41,7 +41,7 @@ void bppc_task_fn(void *arg){
 		throttleEngaged = (data->throttlePercent > BPPC_APPS_H_THRESH);
 		throttleReleased = (data->throttlePercent < BPPC_APPS_L_THRESH);
 
-		// EV 5.7 (2022)
+		// EV.5.7 (2022)
 		if(data->bppcFaultFlag == true){
 			if(throttleReleased){
 				data->bppcFaultFlag = false;

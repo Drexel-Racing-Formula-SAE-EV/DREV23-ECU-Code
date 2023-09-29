@@ -47,7 +47,7 @@ void bse_task_fn(void *arg){
 		bse1->percent = presstransGetPercent(bse1);
 		bse2->percent = presstransGetPercent(bse2);
 
-		// Check for error in readings
+		// T.4.3.3 (2022)
 		if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
 			data->bseFaultFlag = true;
 			HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
