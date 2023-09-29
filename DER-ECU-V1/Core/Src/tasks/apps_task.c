@@ -61,7 +61,7 @@ void apps_task_fn(void *arg) {
             // Convert to a floating point percentage
             apps1->percent = potenGetPercent(apps1);
             apps1->percent = potenGetPercent(apps2);
-            if(!poten_check_implausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
+            if(!potenCheckImplausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
                 // Set RFE low, disable motor
                 data->appsFaultFlag = true;
                 setRFE(false);
@@ -72,9 +72,8 @@ void apps_task_fn(void *arg) {
             // Convert to hex number for Bamocar register value
             throttleHex = percentToThrottleHex(data->throttlePercent);
 
-            // When flag is not set, send normal torque command
-            TxPacket.data[1] = TO_LSB(throttleHex);
-            TxPacket.data[2] = TO_MSB(throttleHex);
+            TxPacket.data[1] = data->bppcFaultFlag? 0x00 : TO_LSB(throttleHex);
+            TxPacket.data[2] = data->bppcFaultFlag? 0x00 : TO_MSB(throttleHex);
         }else{
             // If implausibility is detected, send 0 torque command 
         	data->throttlePercent = 0;

@@ -29,6 +29,6 @@ float potenGetPercent(struct poten *root);
 
 uint16_t percentToThrottleHex(float percent);
 
-uint8_t poten_check_implausability(float L, float R, int thresh, int count);
+uint8_t potenCheckImplausability(float L, float R, int thresh, int count);
 
 #endif /* INC_EXT_DRIVERS_POTEN_H_ */

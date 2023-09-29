@@ -28,7 +28,7 @@ void pressTrans_init(struct pressTrans *pressTrans, uint16_t min, uint16_t max, 
 
 float presstransGetPercent(struct pressTrans *root);
 
-uint8_t presstrans_check_implausability(float L, float R, int thresh, int count);
+uint8_t presstransCheckImplausability(float L, float R, int thresh, int count);
 
-uint8_t switch_to_defined_channel (struct pressTrans *root);
+uint8_t switchChannelADC (struct pressTrans *root);
 #endif /* INC_EXT_DRIVERS_PRESSTRANS_H_ */

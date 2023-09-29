@@ -38,9 +38,9 @@ void bse_task_fn(void *arg){
 		entryTicksCount = osKernelGetTickCount();
 
 		// Read ADC channels for each BSE input
-		switch_to_defined_channel(bse1);
+		switchChannelADC(bse1);
 		bse1->count = bse1->read_count(bse1->handle);
-		switch_to_defined_channel(bse2);
+		switchChannelADC(bse2);
 		bse2->count = bse2->read_count(bse2->handle);
 
 		// Calculate Percentage
@@ -48,13 +48,14 @@ void bse_task_fn(void *arg){
 		bse2->percent = presstransGetPercent(bse2);
 
 		// Check for error in readings
-		if(!presstrans_check_implausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+		if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
 			data->bseFaultFlag = true;
 			HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
 		}
 		// Set average value
 		data->brakePercent = (bse1->percent + bse2->percent) / 2;
 
+		// Operate brake light
 		newBrakeLightState = (data->brakePercent >= BRAKE_LIGHT_THRESH);
 		if(data->brakeLightState != newBrakeLightState){
 			data->brakeLightState = newBrakeLightState;

@@ -34,7 +34,7 @@ float presstransGetPercent(struct pressTrans *root) {
 	}
 }
 
-uint8_t presstrans_check_implausability(float L, float R, int thresh, int count){
+uint8_t presstransCheckImplausability(float L, float R, int thresh, int count){
     static unsigned int counts = 0;
 
 	// Check if APPS1 and APPS2 are more than 10% different
@@ -52,7 +52,7 @@ uint8_t presstrans_check_implausability(float L, float R, int thresh, int count)
 
 
 
-uint8_t switch_to_defined_channel (struct pressTrans *root){
+uint8_t switchChannelADC (struct pressTrans *root){
 	//TODO: add code here from the prefeature APPS branch
 	ADC_ChannelConfTypeDef sConfig = {0};
 	/** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.

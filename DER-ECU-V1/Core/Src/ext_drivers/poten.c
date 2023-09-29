@@ -36,7 +36,7 @@ uint16_t percentToThrottleHex(float percent){
     return (uint16_t)percent * 0x5555;
 }
 
-uint8_t poten_check_implausability(float L, float R, int thresh, int count){
+uint8_t potenCheckImplausability(float L, float R, int thresh, int count){
     static unsigned int counts = 0;
 
 	// Check if APPS1 and APPS2 are more than 10% different

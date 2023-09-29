@@ -1,21 +1,17 @@
-/*
- * dev_task.h
- *
- *  Created on: Mar 14, 2023
- *      Author: colebardin
+/**
+ * @file dev_task.h
+ * @author Cole Bardin (cab572@drexel.edu)
+ * @brief 
+ * @version 0.1
+ * @date 2023-09-28
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
-#ifndef INC_TASKS_DEV_TASK_H_
-#define INC_TASKS_DEV_TASK_H_
+#pragma once 
 
 #include "cmsis_os.h"
 #include "app.h"
-#include <stdio.h>
-#include <string.h>
-#include "ext_drivers/pressTrans.h"
 
 TaskHandle_t dev_task_start(struct app_data *data);
-
-uint8_t switch_to_defined_channel (struct pressTrans *root);
-
-#endif /* INC_TASKS_DEV_TASK_H_ */
