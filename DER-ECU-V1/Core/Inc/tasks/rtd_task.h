@@ -21,10 +21,3 @@
 * @return TaskHandle_t Handle used for task
 */
 TaskHandle_t rtd_task_start(struct app_data *data);
-
-/**
- * @brief Deletes the RTD task after successful execution 
- * 
- * @param task Task handle of the RTD task
- */
-void rtd_task_delete(TaskHandle_t task);

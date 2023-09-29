@@ -35,22 +35,18 @@ void rtd_task_fn(void *arg){
 	while(1){
 		// EV.10.4.3
 		if(!data->rtdFlag){
-			// Tractive System Active Signal
 			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_signal_GPIO_Port, TSAL_HV_signal_Pin);
-			// Brakes
 			brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
-			// RTD Button
-			// TODO: determine RTD button input
-			//rtdButton = HAL_GPIO_ReadPin()
+			rtdButton = HAL_GPIO_ReadPin(BAMOCAR_RTD_Go_GPIO_Port, BAMOCAR_RTD_Go_Pin);
 
-			if(tsalHV && brakesEngaged && rtdButton) data->rtdFlag = true
-			else osDelay(1);
+			if(tsalHV && brakesEngaged && rtdButton) data->rtdFlag = true;
+		}else{
+			data->rtd_task = NULL;
+			vTaskDelete(NULL);
+
+			while(1) osDelay(1000);
 		}
-
-		rtd_task_delete(data->rtd_task);
+		
+		osDelay(1);
 	}
-}
-
-void rtd_task_delete(TaskHandle_t task){
-
 }
