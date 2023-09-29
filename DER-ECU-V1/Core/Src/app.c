@@ -9,6 +9,7 @@
 #include <tasks/bse_task.h>
 
 #include "tasks/dev_task.h"
+#include "tasks/rtd_task.h"
 #include "tasks/error_task.h"
 #include "tasks/bse_task.h"
 #include "tasks/bppc_task.h"
@@ -18,6 +19,8 @@
 struct app_data app = {0};
 
 void app_create() {
+	app.rtdFlag = false;
+
 	app.hardSystemFault = false;
 	app.softSystemFault = false;
 
@@ -33,6 +36,7 @@ void app_create() {
 	board_init(&app.board);
 
 	//assert(app.dev_task = dev_task_start(&app));
+	assert(app.rtd_task = rtd_task_start(&app));
 	assert(app.error_task = error_task_start(&app));
 	assert(app.canbus_task = canbus_task_start(&app));
 	assert(app.bse_task = bse_task_start(&app));

@@ -46,6 +46,8 @@ struct app_data {
 	float throttlePercent;
 	float brakePercent;
 
+	bool rtdFlag;
+
 	bool hardSystemFault;
 	bool softSystemFault;
 	
@@ -58,6 +60,7 @@ struct app_data {
 	struct board board;
 
 	TaskHandle_t dev_task;
+	TaskHandle_t rtd_task;
 	TaskHandle_t error_task;
 	TaskHandle_t apps_task;
 	TaskHandle_t bse_task;
