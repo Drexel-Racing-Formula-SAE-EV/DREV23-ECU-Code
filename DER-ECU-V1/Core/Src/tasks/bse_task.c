@@ -61,6 +61,7 @@ void bse_task_fn(void *arg){
 			data->brakeLightState = newBrakeLightState;
 			setBrakeLight(newBrakeLightState);
 		}
+
 		osDelayUntil(entryTicksCount + (1000 / BSE_FREQ));
 	}
 }
