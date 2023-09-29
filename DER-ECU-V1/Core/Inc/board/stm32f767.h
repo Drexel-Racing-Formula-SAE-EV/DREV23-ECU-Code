@@ -1,15 +1,18 @@
-/*
- * stm32f767.h
- *
- *  Created on: Mar 13, 2023
- *      Author: colebardin
- */
+/**
+* @file stm32f767.h
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-03-13
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
-#ifndef INC_BOARD_STM32F767_H_
-#define INC_BOARD_STM32F767_H_
+#pragma once
 
-#include "cmsis_os.h"
 #include <stm32f7xx_hal.h>
+#include "cmsis_os.h"
 
 struct stm32f767_device {
 	ADC_HandleTypeDef hadc1;
@@ -37,5 +40,3 @@ struct stm32f767_device {
 };
 
 void stm32f767_init(struct stm32f767_device *dev);
-
-#endif /* INC_BOARD_STM32F767_H_ */

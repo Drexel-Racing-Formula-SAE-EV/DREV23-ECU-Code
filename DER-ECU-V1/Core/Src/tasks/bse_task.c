@@ -9,7 +9,7 @@
 *
 */
 
-#include <tasks/bse_task.h>
+#include "tasks/bse_task.h"
 #include "main.h"
 
 /**

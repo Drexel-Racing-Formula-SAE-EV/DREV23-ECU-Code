@@ -13,7 +13,7 @@
 
 #include <stdbool.h>
 
-#include <ext_drivers/pressTrans.h>
+#include "ext_drivers/pressTrans.h"
 #include "board/stm32f767.h"
 #include "ext_drivers/poten.h"
 #include "ext_drivers/canbus.h"

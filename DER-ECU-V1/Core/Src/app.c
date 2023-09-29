@@ -1,13 +1,16 @@
-/*
- * app.c
- *
- *  Created on: Mar 13, 2023
- *      Author: colebardin
- */
+/**
+* @file app.c
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-03-19
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
 #include "app.h"
-#include <tasks/bse_task.h>
-
+#include "tasks/bse_task.h"
 #include "tasks/dev_task.h"
 #include "tasks/rtd_task.h"
 #include "tasks/error_task.h"

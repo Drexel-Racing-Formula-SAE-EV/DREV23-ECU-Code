@@ -1,11 +1,15 @@
-/*
- * stm32f767.c
- *
- *  Created on: Mar 13, 2023
- *      Author: colebardin
- */
+/**
+* @file stm32f767.c
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-03-13
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
-#include <board/stm32f767.h>
+#include "board/stm32f767.h"
 #include "main.h"
 #include "ext_drivers/canbus.h"
 

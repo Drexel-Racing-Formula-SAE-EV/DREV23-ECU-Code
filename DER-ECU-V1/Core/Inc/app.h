@@ -1,15 +1,19 @@
-/*
- * app.h
- *
- *  Created on: Mar 13, 2023
- *      Author: colebardin
- */
+/**
+* @file app.h
+* @author Cole Bardin (cab572@drexel.edu)
+* @brief
+* @version 0.1
+* @date 2023-03-13
+*
+* @copyright Copyright (c) 2023
+*
+*/
 
-#ifndef APP_H_
-#define APP_H_
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
+
 #include "main.h"
 #include "board/board.h"
 
@@ -70,5 +74,3 @@ struct app_data {
 };
 
 void app_create();
-
-#endif /* APP_H_ */
