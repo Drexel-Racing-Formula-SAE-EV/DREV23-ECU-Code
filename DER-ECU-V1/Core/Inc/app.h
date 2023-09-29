@@ -25,6 +25,9 @@
 #define BSE2_MIN 175 //Brake emulator min: 175 //Theoretical value (ADC max): 810
 #define BSE2_MAX 2250 //Brake emulator max: 2250 //Theoretical value (ADC max): 2158
 
+#define BSE1_ADC_CH 13
+#define BSE2_ADC_CH 9
+
 #define APPS1_MIN 339
 #define APPS1_MAX 1900
 #define APPS2_MIN 810

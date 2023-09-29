@@ -20,6 +20,7 @@ void app_create() {
 	app.bseFaultFlag = false;
 	app.systemShutdown = false;
 	app.brakeLightState = false;
+
 	app.torquePercent = 0;
 	app.brakePercent = 0;
 
