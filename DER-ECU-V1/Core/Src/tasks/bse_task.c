@@ -34,7 +34,7 @@ void bse_task_fn(void *arg){
 
     uint32_t entryTicksCount;
 
-	while (1){
+	while(1){
 		entryTicksCount = osKernelGetTickCount();
 
 		// Read ADC channels for each BSE input

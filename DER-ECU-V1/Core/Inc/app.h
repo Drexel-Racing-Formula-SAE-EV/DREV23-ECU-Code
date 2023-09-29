@@ -18,6 +18,7 @@
 #define BPPC_BSE_THRESH 10
 #define BPPC_APPS_H_THRESH 25
 #define BPPC_APPS_L_THRESH 5
+#define RTD_BSE_THRESH 10
 
 #define APPS_FREQ 200
 #define ERROR_FREQ 50

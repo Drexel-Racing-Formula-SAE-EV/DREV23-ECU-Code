@@ -27,11 +27,24 @@ TaskHandle_t rtd_task_start(struct app_data *data){
 
 void rtd_task_fn(void *arg){
     struct app_data *data = (struct app_data *)arg;
-	   
+	
+	bool tsalHV = false;
+	bool brakesEngaged = false;
+	bool rtdButton = false;
+
 	while(1){
+		// EV.10.4.3
 		if(!data->rtdFlag){
-			
-			osDelay(1);
+			// Tractive System Active Signal
+			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_signal_GPIO_Port, TSAL_HV_signal_Pin);
+			// Brakes
+			brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
+			// RTD Button
+			// TODO: determine RTD button input
+			//rtdButton = HAL_GPIO_ReadPin()
+
+			if(tsalHV && brakesEngaged && rtdButton) data->rtdFlag = true
+			else osDelay(1);
 		}
 
 		rtd_task_delete(data->rtd_task);
