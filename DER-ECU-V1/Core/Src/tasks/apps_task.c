@@ -54,7 +54,7 @@ void apps_task_fn(void *arg) {
         // Record number of ticks at entry of each loop 
         entryTicksCount = osKernelGetTickCount();
 
-        if(data->apps_fault_flag == false && data->bse_fault_flag == false){
+        if(data->appsFaultFlag == false && data->bseFaultFlag == false){
             // Read APPS potentiometers
             apps1->count = apps1->read_count(apps1->handle);
             apps2->count = apps2->read_count(apps2->handle);
@@ -62,24 +62,24 @@ void apps_task_fn(void *arg) {
             // Convert to a floating point percentage
             apps1->percent = potenGetPercent(apps1);
             apps1->percent = potenGetPercent(apps2);
-            if(!poten_check_implausability(apps1->percent, apps2->percent, THRESH, APPS_FREQ / 10)){
+            if(!poten_check_implausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
                 // If plausibility check fails, set flag until soft reset
-                data->apps_fault_flag = true;
+                data->appsFaultFlag = true;
                 // Set RFE low, disable motor
                 HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
             }
 
             // Average throttle percents
-            data->torque = (apps1->percent + apps2->percent) / 2;
+            data->torquePercent = (apps1->percent + apps2->percent) / 2;
             // Convert to hex number for Bamocar register value
-            torque_hex = percent_to_trq_hex(data->torque);
+            torque_hex = percent_to_trq_hex(data->torquePercent);
 
             // When flag is not set, send normal torque command
             tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);
             tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
         }else{
             // If implausibility is detected, send 0 torque command 
-        	data->torque = 0;
+        	data->torquePercent = 0;
             tx_packet.data[1] = 0x00;
             tx_packet.data[2] = 0x00;
         }

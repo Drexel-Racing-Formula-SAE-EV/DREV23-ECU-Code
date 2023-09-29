@@ -10,9 +10,6 @@
 
 //#include "main.h" //added because switch Channel function
 
-#define THRESH 10
-#define NSAMPLES 100
-
 void pressTrans_init(struct pressTrans *pressTrans,
 					uint16_t min,
 					uint16_t max,

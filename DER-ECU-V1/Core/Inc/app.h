@@ -10,9 +10,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include "main.h"
 #include "board/board.h"
 
-#define THRESH 10
+#define PLAUSIBILITY_THRESH 10
+#define BRAKE_LIGHT_THRESH 5
 #define APPS_FREQ 200
 #define BSE_FREQ 50
 
@@ -32,12 +34,14 @@
 #define BAMOCAR_CANBUS_TORQUE_CMD 0x90
 
 struct app_data {
-	// 
-	float torque;
-	float brakePercentage;
-	bool system_shutdown;
-	bool apps_fault_flag;
-	bool bse_fault_flag;
+	float torquePercent;
+	float brakePercent;
+
+	bool systemShutdown;
+	bool appsFaultFlag;
+	bool bseFaultFlag;
+	bool brakeLightState;
+
 	struct board board;
 
 	TaskHandle_t dev_task;

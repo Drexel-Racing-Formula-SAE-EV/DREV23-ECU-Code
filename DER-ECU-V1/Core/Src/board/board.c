@@ -9,8 +9,10 @@
  * 
  */
 
-#include <board/board.h>
+#include "board/board.h"
 #include "app.h"
+
+extern struct app_data app;
 
 void board_init(struct board* dev) {
 	stm32f767_init(&dev->stm32f767);
@@ -32,4 +34,8 @@ uint16_t ADC_read_count(void *hadc) {
 	HAL_ADC_Stop(hadc);
 
 	return count;
+}
+
+void setBrakeLight(bool state){
+	HAL_GPIO_WritePin(Brake_Light_Control_GPIO_Port, Brake_Light_Control_Pin, state);
 }

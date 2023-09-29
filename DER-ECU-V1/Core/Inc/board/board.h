@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #include <ext_drivers/pressTrans.h>
 #include "board/stm32f767.h"
 #include "ext_drivers/poten.h"
@@ -32,3 +34,5 @@ struct board {
 void board_init(struct board* dev);
 
 uint16_t ADC_read_count(void *hadc);
+
+void setBrakeLight(bool state);

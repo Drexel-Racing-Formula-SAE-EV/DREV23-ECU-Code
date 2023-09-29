@@ -30,6 +30,7 @@ void bse_task_fn(void *arg){
     struct app_data *data = (struct app_data *)arg;
     struct pressTrans *bse1 = &data->board.bse1;
     struct pressTrans *bse2 = &data->board.bse2;
+    bool newBrakeLightState;
 
     uint32_t entryTicksCount;
 
@@ -47,12 +48,18 @@ void bse_task_fn(void *arg){
 		bse2->percent = presstransGetPercent(bse2);
 
 		// Check for error in readings
-		if(!presstrans_check_implausability(bse1->percent, bse2->percent, THRESH, BSE_FREQ / 10)){
-			data->bse_fault_flag = true;
+		if(!presstrans_check_implausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+			data->bseFaultFlag = true;
 			HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
 		}
 		// Set average value
-		data->brakePercentage = (bse1->percent + bse2->percent) / 2;
+		data->brakePercent = (bse1->percent + bse2->percent) / 2;
+
+		newBrakeLightState = (data->brakePercent >= BRAKE_LIGHT_THRESH);
+		if(data->brakeLightState != newBrakeLightState){
+			data->brakeLightState = newBrakeLightState;
+			setBrakeLight(newBrakeLightState);
+		}
 
 		osDelayUntil(entryTicksCount + (1000 / BSE_FREQ));
 	}
