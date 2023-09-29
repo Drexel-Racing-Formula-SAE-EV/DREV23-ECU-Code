@@ -13,8 +13,8 @@
 #include "tasks/apps_task.h"
 #include "ext_drivers/canbus.h"
 
-#define TRQ_HEX_TO_LSB(x) (x & 0xff)
-#define TRQ_HEX_TO_MSB(x) (x >> 8)
+#define TO_LSB(x) (x & 0xff)
+#define TO_MSB(x) (x >> 8)
 
 /**
  * @brief Actual APPS task function
@@ -33,24 +33,23 @@ void apps_task_fn(void *arg) {
     struct app_data *data = (struct app_data *)arg;
     struct poten *apps1 = &data->board.apps1;
     struct poten *apps2 = &data->board.apps2;
+    osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
 
-    uint16_t torque_hex;
-    canbus_packet tx_packet;
+    uint16_t throttleHex;
+    canbus_packet TxPacket;
     uint32_t entryTicksCount;
 
     // Initialize all CANBus data values to 0
     for (uint8_t i = 0; i < 8; i++){
-        tx_packet.data[i] = 0x00;
+        TxPacket.data[i] = 0x00;
     }
 
     // Set CANBus Receiving ID in header
-    tx_packet.id = BAMOCAR_CANBUS_RXID;
+    TxPacket.id = BAMOCAR_CANBUS_RXID;
     // Set the command identifier to be Torque Command
-    tx_packet.data[0] = BAMOCAR_CANBUS_TORQUE_CMD;
+    TxPacket.data[0] = BAMOCAR_CANBUS_TORQUE_CMD;
 
-    osMessageQueueId_t canbus_mq = data->board.stm32f767.can1_mq;
-
-    while (1){
+    while(1){
         // Record number of ticks at entry of each loop 
         entryTicksCount = osKernelGetTickCount();
 
@@ -63,29 +62,28 @@ void apps_task_fn(void *arg) {
             apps1->percent = potenGetPercent(apps1);
             apps1->percent = potenGetPercent(apps2);
             if(!poten_check_implausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
-                // If plausibility check fails, set flag until soft reset
-                data->appsFaultFlag = true;
                 // Set RFE low, disable motor
-                HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
+                data->appsFaultFlag = true;
+                setRFE(false);
             }
 
             // Average throttle percents
-            data->torquePercent = (apps1->percent + apps2->percent) / 2;
+            data->throttlePercent = (apps1->percent + apps2->percent) / 2;
             // Convert to hex number for Bamocar register value
-            torque_hex = percent_to_trq_hex(data->torquePercent);
+            throttleHex = percentToThrottleHex(data->throttlePercent);
 
             // When flag is not set, send normal torque command
-            tx_packet.data[1] = TRQ_HEX_TO_LSB(torque_hex);
-            tx_packet.data[2] = TRQ_HEX_TO_MSB(torque_hex);
+            TxPacket.data[1] = TO_LSB(throttleHex);
+            TxPacket.data[2] = TO_MSB(throttleHex);
         }else{
             // If implausibility is detected, send 0 torque command 
-        	data->torquePercent = 0;
-            tx_packet.data[1] = 0x00;
-            tx_packet.data[2] = 0x00;
+        	data->throttlePercent = 0;
+            TxPacket.data[1] = 0x00;
+            TxPacket.data[2] = 0x00;
         }
 
         // Put torque packet in the queue and notify CANBus task
-        osMessageQueuePut(canbus_mq, &tx_packet, 0, HAL_MAX_DELAY);
+        osMessageQueuePut(canbus_mq, &TxPacket, 0, HAL_MAX_DELAY);
         xTaskNotify(data->canbus_task, CANBUS_APPS, eSetBits);
 
         // Delay such that this task will occur at exactly desired frequency

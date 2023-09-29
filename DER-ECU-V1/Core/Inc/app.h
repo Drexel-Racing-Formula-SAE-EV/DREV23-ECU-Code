@@ -15,8 +15,13 @@
 
 #define PLAUSIBILITY_THRESH 10
 #define BRAKE_LIGHT_THRESH 5
+#define BPPC_BSE_THRESH 10
+#define BPPC_APPS_H_THRESH 25
+#define BPPC_APPS_L_THRESH 5
+
 #define APPS_FREQ 200
 #define BSE_FREQ 50
+#define BPPC_FREQ 20
 
 // 0.12V - 1.8V * (3/2) resistor divider => 0.18V - 2.7V
 #define BSE1_MIN 155//Brake emulator min: 155 //Theoretical value (ADC max): 339
@@ -37,12 +42,14 @@
 #define BAMOCAR_CANBUS_TORQUE_CMD 0x90
 
 struct app_data {
-	float torquePercent;
+	float throttlePercent;
 	float brakePercent;
 
-	bool systemShutdown;
+	bool systemFault;
+	
 	bool appsFaultFlag;
 	bool bseFaultFlag;
+	bool bppcFaultFlag;
 	bool brakeLightState;
 
 	struct board board;
@@ -50,6 +57,7 @@ struct app_data {
 	TaskHandle_t dev_task;
 	TaskHandle_t apps_task;
 	TaskHandle_t bse_task;
+	TaskHandle_t bppc_task;
 	TaskHandle_t canbus_task;
 };
 

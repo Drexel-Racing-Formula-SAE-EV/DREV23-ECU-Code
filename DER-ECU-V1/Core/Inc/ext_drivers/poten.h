@@ -27,7 +27,7 @@ void poten_init(struct poten *poten, uint16_t min, uint16_t max, void *handle, u
 
 float potenGetPercent(struct poten *root);
 
-uint16_t percent_to_trq_hex(float percent);
+uint16_t percentToThrottleHex(float percent);
 
 uint8_t poten_check_implausability(float L, float R, int thresh, int count);
 

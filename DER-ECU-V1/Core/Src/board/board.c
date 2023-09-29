@@ -39,3 +39,7 @@ uint16_t ADC_read_count(void *hadc) {
 void setBrakeLight(bool state){
 	HAL_GPIO_WritePin(Brake_Light_Control_GPIO_Port, Brake_Light_Control_Pin, state);
 }
+
+void setRFE(bool state){
+	HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, state);
+}

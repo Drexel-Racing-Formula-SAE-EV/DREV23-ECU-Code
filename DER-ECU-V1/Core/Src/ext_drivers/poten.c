@@ -30,7 +30,7 @@ float potenGetPercent(struct poten *root) {
 	}
 }
 
-uint16_t percent_to_trq_hex(float percent){
+uint16_t percentToThrottleHex(float percent){
     if (percent > 100) percent = 100.0;
     if (percent < 0) percent = 0.0;
     return (uint16_t)percent * 0x5555;

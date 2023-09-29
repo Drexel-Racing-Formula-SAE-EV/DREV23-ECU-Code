@@ -36,3 +36,4 @@ void board_init(struct board* dev);
 uint16_t ADC_read_count(void *hadc);
 
 void setBrakeLight(bool state);
+void setRFE(bool state);
