@@ -52,28 +52,26 @@ void apps_task_fn(void *arg) {
     while(1){
         entryTicksCount = osKernelGetTickCount();
 
-        if(!data->hardSystemFault){
-            // Read throttle
-            apps1->count = apps1->read_count(apps1->handle);
-            apps2->count = apps2->read_count(apps2->handle);
-            apps1->percent = potenGetPercent(apps1);
-            apps1->percent = potenGetPercent(apps2);
+        // Read throttle
+        apps1->count = apps1->read_count(apps1->handle);
+        apps2->count = apps2->read_count(apps2->handle);
+        apps1->percent = potenGetPercent(apps1);
+        apps1->percent = potenGetPercent(apps2);
 
-            // T.4.2.5 (2022)
-            if(!potenCheckImplausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
-                data->appsFaultFlag = true;
-            }
+        // T.4.2.5 (2022)
+        if(!potenCheckImplausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
+            data->appsFaultFlag = true;
+        }
 
-            data->throttlePercent = (apps1->percent + apps2->percent) / 2;
-            throttleHex = percentToThrottleHex(data->throttlePercent);
+        data->throttlePercent = (apps1->percent + apps2->percent) / 2;
 
-            TxPacket.data[1] = data->bppcFaultFlag? 0x00 : TO_LSB(throttleHex);
-            TxPacket.data[2] = data->bppcFaultFlag? 0x00 : TO_MSB(throttleHex);
-        }else{
-            // Non recoverable error state, send zero throttle
-        	data->throttlePercent = 0;
+        if(data->hardSystemFault || data->softSystemFault){
             TxPacket.data[1] = 0x00;
             TxPacket.data[2] = 0x00;
+        }else{
+            throttleHex = percentToThrottleHex(data->throttlePercent);
+            TxPacket.data[1] = TO_LSB(throttleHex);
+            TxPacket.data[2] = TO_MSB(throttleHex);
         }
 
         // Give torque command to CANBus Task

@@ -47,11 +47,9 @@ void bse_task_fn(void *arg){
 		bse1->percent = presstransGetPercent(bse1);
 		bse2->percent = presstransGetPercent(bse2);
 
-		if(!data->hardSystemFault){
-			// T.4.3.3 (2022)
-			if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
-				data->bseFaultFlag = true;
-			}
+		// T.4.3.3 (2022)
+		if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+			data->bseFaultFlag = true;
 		}
 
 		// Set average value
