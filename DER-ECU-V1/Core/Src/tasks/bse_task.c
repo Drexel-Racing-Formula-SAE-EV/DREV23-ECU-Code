@@ -47,11 +47,13 @@ void bse_task_fn(void *arg){
 		bse1->percent = presstransGetPercent(bse1);
 		bse2->percent = presstransGetPercent(bse2);
 
-		// T.4.3.3 (2022)
-		if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
-			data->bseFaultFlag = true;
-			HAL_GPIO_WritePin(BAMOCAR_RFE_Activate_GPIO_Port, BAMOCAR_RFE_Activate_Pin, 0);
+		if(!data->hardSystemFault){
+			// T.4.3.3 (2022)
+			if(!presstransCheckImplausability(bse1->percent, bse2->percent, PLAUSIBILITY_THRESH, BSE_FREQ / 10)){
+				data->bseFaultFlag = true;
+			}
 		}
+
 		// Set average value
 		data->brakePercent = (bse1->percent + bse2->percent) / 2;
 
@@ -61,7 +63,6 @@ void bse_task_fn(void *arg){
 			data->brakeLightState = newBrakeLightState;
 			setBrakeLight(newBrakeLightState);
 		}
-
 		osDelayUntil(entryTicksCount + (1000 / BSE_FREQ));
 	}
 }

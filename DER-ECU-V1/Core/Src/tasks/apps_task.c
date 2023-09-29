@@ -40,7 +40,7 @@ void apps_task_fn(void *arg) {
     uint32_t entryTicksCount;
 
     // Initialize all CANBus data values to 0
-    for (uint8_t i = 0; i < 8; i++){
+    for(uint8_t i = 0; i < 8; i++){
         TxPacket.data[i] = 0x00;
     }
 
@@ -52,7 +52,7 @@ void apps_task_fn(void *arg) {
     while(1){
         entryTicksCount = osKernelGetTickCount();
 
-        if(data->appsFaultFlag == false && data->bseFaultFlag == false){
+        if(!data->hardSystemFault){
             // Read throttle
             apps1->count = apps1->read_count(apps1->handle);
             apps2->count = apps2->read_count(apps2->handle);
@@ -61,9 +61,7 @@ void apps_task_fn(void *arg) {
 
             // T.4.2.5 (2022)
             if(!potenCheckImplausability(apps1->percent, apps2->percent, PLAUSIBILITY_THRESH, APPS_FREQ / 10)){
-                // Set RFE low, disable motor
                 data->appsFaultFlag = true;
-                setRFE(false);
             }
 
             data->throttlePercent = (apps1->percent + apps2->percent) / 2;

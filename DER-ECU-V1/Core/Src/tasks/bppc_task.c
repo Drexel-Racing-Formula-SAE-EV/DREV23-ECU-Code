@@ -45,11 +45,9 @@ void bppc_task_fn(void *arg){
 		if(data->bppcFaultFlag == true){
 			if(throttleReleased){
 				data->bppcFaultFlag = false;
-				setRFE(true);
 			}
 		}else if(brakesEnganged && throttleEngaged){
 			data->bppcFaultFlag = true;
-			setRFE(false);
 		}
 
 		osDelayUntil(entryTicksCount + (1000 / BPPC_FREQ));

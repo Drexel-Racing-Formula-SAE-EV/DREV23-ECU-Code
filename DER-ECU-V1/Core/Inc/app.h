@@ -20,6 +20,7 @@
 #define BPPC_APPS_L_THRESH 5
 
 #define APPS_FREQ 200
+#define ERROR_FREQ 50
 #define BSE_FREQ 50
 #define BPPC_FREQ 20
 
@@ -45,16 +46,19 @@ struct app_data {
 	float throttlePercent;
 	float brakePercent;
 
-	bool systemFault;
+	bool hardSystemFault;
+	bool softSystemFault;
 	
 	bool appsFaultFlag;
 	bool bseFaultFlag;
 	bool bppcFaultFlag;
+	
 	bool brakeLightState;
 
 	struct board board;
 
 	TaskHandle_t dev_task;
+	TaskHandle_t error_task;
 	TaskHandle_t apps_task;
 	TaskHandle_t bse_task;
 	TaskHandle_t bppc_task;
