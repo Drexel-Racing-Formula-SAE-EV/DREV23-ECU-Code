@@ -32,9 +32,11 @@ void rtd_task_fn(void *arg){
 	bool brakesEngaged = false;
 	bool rtdButton = false;
 
+	data->rtdFlag = false;
+
 	while(1){
-		// EV.10.4.3
 		if(!data->rtdFlag){
+			// EV.10.4.3
 			tsalHV = HAL_GPIO_ReadPin(TSAL_HV_signal_GPIO_Port, TSAL_HV_signal_Pin);
 			brakesEngaged = (data->brakePercent >= RTD_BSE_THRESH);
 			rtdButton = HAL_GPIO_ReadPin(BAMOCAR_RTD_Go_GPIO_Port, BAMOCAR_RTD_Go_Pin);
@@ -42,6 +44,8 @@ void rtd_task_fn(void *arg){
 			if(tsalHV && brakesEngaged && rtdButton) data->rtdFlag = true;
 		}else{
 			data->rtd_task = NULL;
+			setRFE(1);
+
 			vTaskDelete(NULL);
 
 			while(1) osDelay(1000);
