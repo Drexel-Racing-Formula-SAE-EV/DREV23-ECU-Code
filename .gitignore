@@ -1,14 +1,23 @@
+#STM32CubeIDE files
+STM32F767ZITX_*
+*.launch
+
 #settings
 .settings/
+.vscode/
 
 #metadata
 .metadata/
+.DS_Store
 
 #Debug
 Debug/
 debug/
 Release/
 release
+
+#Drivers
+Drivers/ 
 
 # Prerequisites
 *.d
