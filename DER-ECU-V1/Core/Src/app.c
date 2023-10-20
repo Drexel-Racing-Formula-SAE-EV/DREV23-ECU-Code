@@ -38,6 +38,7 @@ void app_create() {
 
 	board_init(&app.board);
 
+	HAL_UART_Receive_IT(app.board.stm32f767.cli.huart, app.board.stm32f767.cli.line, 1);
 	//assert(app.dev_task = dev_task_start(&app));
 	assert(app.rtd_task = rtd_task_start(&app));
 	assert(app.error_task = error_task_start(&app));

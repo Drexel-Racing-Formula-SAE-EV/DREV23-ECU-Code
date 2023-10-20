@@ -63,8 +63,7 @@ const osMutexAttr_t uart3_mutex_attr = {
 	.cb_size = 0UL,
 };
 
-void stm32f767_init(struct stm32f767_device *dev)
-{
+void stm32f767_init(struct stm32f767_device *dev){
 	MX_GPIO_Init();
 	MX_USART3_UART_Init();
 	MX_ADC1_Init();
@@ -106,4 +105,6 @@ void stm32f767_init(struct stm32f767_device *dev)
 
 	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
+
+	cli_device_init(&dev->cli, &dev->huart3);
 }

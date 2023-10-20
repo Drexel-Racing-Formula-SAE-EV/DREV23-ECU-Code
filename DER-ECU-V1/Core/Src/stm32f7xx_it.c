@@ -59,6 +59,7 @@ extern struct app_data app;
 
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
+
 extern TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN EV */
@@ -178,6 +179,22 @@ void CAN1_RX0_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles USART3 global interrupt.
+  */
+void USART3_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART3_IRQn 0 */
+	extern struct app_data app;
+
+	UART_HandleTypeDef *huart3 = app.board.stm32f767.cli.huart;
+  /* USER CODE END USART3_IRQn 0 */
+  HAL_UART_IRQHandler(huart3);
+  /* USER CODE BEGIN USART3_IRQn 1 */
+
+  /* USER CODE END USART3_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM7 global interrupt.
   */
 void TIM7_IRQHandler(void)
@@ -192,6 +209,23 @@ void TIM7_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	extern struct app_data app;
+
+	struct cli_device *cli = &app.board.stm32f767.cli;
+
+	HAL_UART_Transmit_IT(huart, &cli->c, 1);
+	if(cli->c == '\n' || cli->c == '\r'){
+		cli->line[cli->index] = '\0';
+		cli->index = 0;
+		// handle cmd
+	}else{
+		cli->line[cli->index++] = cli->c;
+	}
+
+	HAL_UART_Receive_IT(huart, &cli->c, 1);
+}
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
 	BaseType_t task = 0;
 	canbus_packet *rx_packet = &app.board.canbus_device.rx_packet;
