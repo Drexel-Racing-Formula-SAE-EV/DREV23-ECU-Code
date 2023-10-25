@@ -12,6 +12,7 @@
 #include "tasks/cli_task.h"
 #include "main.h"
 #include <string.h>
+#include <stdio.h>
 
 /**
 * @brief Actual CLI task function
@@ -21,13 +22,18 @@
 void cli_task_fn(void *arg);
 
 void get_throttle(char *arg);
+void get_brakelight(char *arg);
 void get_brake(char *arg);
+void get_time(char *arg);
 
+char line[256];
 struct app_data *ad;
 command cmds[] = 
 {
 	{"get throttle", &get_throttle},
-	{"get brake", &get_brake}
+	{"get brakelight", &get_brakelight},
+	{"get brake", &get_brake},
+	{"get time", &get_time}
 };
 
 TaskHandle_t cli_task_start(struct app_data *data){
@@ -50,7 +56,8 @@ void cli_task_fn(void *arg){
 		if(cli->msg_pending == true){
 			for(i = 0; i < num_cmds + 1; i++){
 				if(i == num_cmds){
-					// cmd not found
+					snprintf(line, 256, "Command not found: \'%s\'", cli->line);
+					cli_putline(line);
 					break;
 				}
 				if(!strncmp(cmds[i].name, cli->line, strlen(cmds[i].name))){
@@ -65,10 +72,21 @@ void cli_task_fn(void *arg){
 
 void get_throttle(char *arg){
 	float x = ad->throttlePercent;
-	x = 0;
+	snprintf(line, 256, "throttle: %6.2f%%", x);
+	cli_putline(line);
+}
+
+void get_brakelight(char *arg){
+	snprintf(line, 256, "brakelight: %s", ad->brakeLightState ? "ON" : "OFF");
+	cli_putline(line);
 }
 
 void get_brake(char *arg){
 	float x = ad->brakePercent;
-	x = 0;
+	snprintf(line, 256, "brake: %6.2f%%", x);
+	cli_putline(line);
+}
+
+void get_time(char *arg){
+	cli_putline("time to get a watch");
 }

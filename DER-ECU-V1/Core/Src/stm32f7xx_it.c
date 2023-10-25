@@ -211,18 +211,22 @@ void TIM7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern struct app_data app;
-	static uint8_t *endl = "\r\n";
+	uint8_t endl = '\n';
 
 	struct cli_device *cli = &app.board.cli;
 
 	HAL_UART_Transmit_IT(huart, &cli->c, 1);
 	if(cli->c == '\n' || cli->c == '\r'){
-		HAL_UART_Transmit_IT(huart, endl, 2);
+		HAL_UART_Transmit_IT(huart, &endl, 1);
 		cli->line[cli->index] = '\0';
 		cli->index = 0;
 		cli->msg_pending = true;
 		// handle cmd
 		xTaskNotifyFromISR(app.cli_task, 0, eNoAction, NULL);
+  }else if(cli->c == 8){
+    cli->index--;
+    cli->line[cli->index] = ' ';
+		HAL_UART_Transmit_IT(huart, &cli->line[cli->index], 1);
 	}else{
 		cli->line[cli->index++] = cli->c;
 	}

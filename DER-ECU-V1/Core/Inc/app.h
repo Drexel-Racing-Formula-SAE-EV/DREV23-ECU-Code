@@ -75,3 +75,5 @@ struct app_data {
 };
 
 void app_create();
+
+void cli_putline(char *line);

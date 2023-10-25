@@ -19,6 +19,7 @@
 #include "tasks/apps_task.h"
 #include "tasks/canbus_task.h"
 #include "tasks/cli_task.h"
+#include <string.h>
 
 struct app_data app = {0};
 
@@ -48,4 +49,14 @@ void app_create() {
 	assert(app.bse_task = bse_task_start(&app));
 	assert(app.apps_task = apps_task_start(&app));
 	assert(app.bppc_task = bppc_task_start(&app));
+}
+
+void cli_putline(char *line){
+	int i;
+	int n;
+	uint8_t nl = '\n';
+	
+	n = strlen(line);
+	HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, n, HAL_MAX_DELAY);
+	HAL_UART_Transmit(app.board.cli.huart, &nl, 1, HAL_MAX_DELAY);
 }
