@@ -65,6 +65,7 @@ struct app_data {
 	struct board board;
 
 	TaskHandle_t dev_task;
+	TaskHandle_t cli_task;
 	TaskHandle_t rtd_task;
 	TaskHandle_t error_task;
 	TaskHandle_t apps_task;

@@ -186,7 +186,7 @@ void USART3_IRQHandler(void)
   /* USER CODE BEGIN USART3_IRQn 0 */
 	extern struct app_data app;
 
-	UART_HandleTypeDef *huart3 = app.board.stm32f767.cli.huart;
+	UART_HandleTypeDef *huart3 = app.board.cli.huart;
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */
@@ -211,14 +211,18 @@ void TIM7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	extern struct app_data app;
+	static uint8_t *endl = "\r\n";
 
-	struct cli_device *cli = &app.board.stm32f767.cli;
+	struct cli_device *cli = &app.board.cli;
 
 	HAL_UART_Transmit_IT(huart, &cli->c, 1);
 	if(cli->c == '\n' || cli->c == '\r'){
+		HAL_UART_Transmit_IT(huart, endl, 2);
 		cli->line[cli->index] = '\0';
 		cli->index = 0;
+		cli->msg_pending = true;
 		// handle cmd
+		xTaskNotifyFromISR(app.cli_task, 0, eNoAction, NULL);
 	}else{
 		cli->line[cli->index++] = cli->c;
 	}

@@ -14,4 +14,5 @@
 void cli_device_init(struct cli_device *dev, UART_HandleTypeDef *huart){
     dev->huart = huart;
     dev->index = 0;
+    dev->msg_pending = false;
 }

@@ -105,6 +105,4 @@ void stm32f767_init(struct stm32f767_device *dev){
 
 	dev->uart3_mutex = osMutexNew(&uart3_mutex_attr);
 	assert(dev->uart3_mutex);
-
-	cli_device_init(&dev->cli, &dev->huart3);
 }

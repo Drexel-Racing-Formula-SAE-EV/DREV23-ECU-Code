@@ -10,15 +10,22 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stm32f7xx_hal.h>
 
 #define CLI_LINE_SIZE 32
 
 struct cli_device {
-    uint8_t line[CLI_LINE_SIZE];
+    char line[CLI_LINE_SIZE];
     uint8_t c;
     unsigned int index;
 	UART_HandleTypeDef *huart;
+    bool msg_pending;
 };
+
+typedef struct {
+    char *name;
+    void (*func)(char *arg);
+} command;
 
 void cli_device_init(struct cli_device *dev, UART_HandleTypeDef *huart);

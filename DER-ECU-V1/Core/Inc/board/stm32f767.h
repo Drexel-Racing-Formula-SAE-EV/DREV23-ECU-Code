@@ -13,11 +13,8 @@
 
 #include <stm32f7xx_hal.h>
 #include "cmsis_os.h"
-#include "ext_drivers/cli.h"
 
 struct stm32f767_device {
-	struct cli_device cli;
-
 	ADC_HandleTypeDef hadc1;
 	ADC_HandleTypeDef hadc2;
 	ADC_HandleTypeDef hadc3;
