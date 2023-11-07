@@ -39,8 +39,7 @@ void app_create() {
 	app.brakePercent = 0;
 
 	board_init(&app.board);
-
-	HAL_UART_Receive_IT(app.board.cli.huart, app.board.cli.line, 1);
+	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 	//assert(app.dev_task = dev_task_start(&app));
 	assert(app.cli_task = cli_task_start(&app));
 	assert(app.rtd_task = rtd_task_start(&app));
@@ -52,11 +51,14 @@ void app_create() {
 }
 
 void cli_putline(char *line){
-	int i;
-	int n;
-	uint8_t nl = '\n';
+	static uint8_t nl[] = "\r\n";
 	
-	n = strlen(line);
-	HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, n, HAL_MAX_DELAY);
-	HAL_UART_Transmit(app.board.cli.huart, &nl, 1, HAL_MAX_DELAY);
+	if(xPortIsInsideInterrupt()){
+		HAL_UART_Transmit_IT(app.board.cli.huart, (uint8_t *)line, strlen(line));
+		HAL_UART_Transmit_IT(app.board.cli.huart, nl, strlen(nl));
+	}else{
+		HAL_UART_Transmit(app.board.cli.huart, (uint8_t *)line, strlen(line), HAL_MAX_DELAY);
+		HAL_UART_Transmit(app.board.cli.huart, nl, strlen(nl), HAL_MAX_DELAY);
+	}
 }
+

@@ -26,6 +26,7 @@ struct cli_device {
 typedef struct {
     char *name;
     void (*func)(char *arg);
+    char *desc;
 } command;
 
 void cli_device_init(struct cli_device *dev, UART_HandleTypeDef *huart);
