@@ -17,6 +17,7 @@
 #include "board/stm32f767.h"
 #include "ext_drivers/poten.h"
 #include "ext_drivers/canbus.h"
+#include "ext_drivers/cli.h"
 
 #define CANBUS_ISR 	0x2	// Notification bit value for ISR messages
 #define CANBUS_APPS	0x1 // Notification bit value for APPS messages 
@@ -29,6 +30,7 @@ struct board {
 	struct poten apps1;
 	struct poten apps2;
  	struct canbus_device canbus_device;
+	struct cli_device cli;
 };
 
 void board_init(struct board* dev);
