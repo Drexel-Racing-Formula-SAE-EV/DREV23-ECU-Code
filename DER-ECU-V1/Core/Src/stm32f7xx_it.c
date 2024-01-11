@@ -60,7 +60,7 @@ extern struct app_data app;
 
 /* External variables --------------------------------------------------------*/
 extern CAN_HandleTypeDef hcan1;
-
+extern UART_HandleTypeDef huart3;
 extern TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN EV */
@@ -68,145 +68,145 @@ extern TIM_HandleTypeDef htim7;
 /* USER CODE END EV */
 
 /******************************************************************************/
-/*             Cortex-M7 Processor Interruption and Exception Handlers          */
+/*           Cortex-M7 Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
-    * @brief This function handles Non maskable interrupt.
-    */
+  * @brief This function handles Non maskable interrupt.
+  */
 void NMI_Handler(void)
 {
-    /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 0 */
 
-    /* USER CODE END NonMaskableInt_IRQn 0 */
-    /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
+  /* USER CODE END NonMaskableInt_IRQn 0 */
+  /* USER CODE BEGIN NonMaskableInt_IRQn 1 */
     while (1)
     {
     }
-    /* USER CODE END NonMaskableInt_IRQn 1 */
+  /* USER CODE END NonMaskableInt_IRQn 1 */
 }
 
 /**
-    * @brief This function handles Hard fault interrupt.
-    */
+  * @brief This function handles Hard fault interrupt.
+  */
 void HardFault_Handler(void)
 {
-    /* USER CODE BEGIN HardFault_IRQn 0 */
+  /* USER CODE BEGIN HardFault_IRQn 0 */
 
-    /* USER CODE END HardFault_IRQn 0 */
-    while (1)
-    {
-      /* USER CODE BEGIN W1_HardFault_IRQn 0 */
-      /* USER CODE END W1_HardFault_IRQn 0 */
-    }
+  /* USER CODE END HardFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_HardFault_IRQn 0 */
+    /* USER CODE END W1_HardFault_IRQn 0 */
+  }
 }
 
 /**
-    * @brief This function handles Memory management fault.
-    */
+  * @brief This function handles Memory management fault.
+  */
 void MemManage_Handler(void)
 {
-    /* USER CODE BEGIN MemoryManagement_IRQn 0 */
+  /* USER CODE BEGIN MemoryManagement_IRQn 0 */
 
-    /* USER CODE END MemoryManagement_IRQn 0 */
-    while (1)
-    {
-      /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
-      /* USER CODE END W1_MemoryManagement_IRQn 0 */
-    }
+  /* USER CODE END MemoryManagement_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_MemoryManagement_IRQn 0 */
+    /* USER CODE END W1_MemoryManagement_IRQn 0 */
+  }
 }
 
 /**
-    * @brief This function handles Pre-fetch fault, memory access fault.
-    */
+  * @brief This function handles Pre-fetch fault, memory access fault.
+  */
 void BusFault_Handler(void)
 {
-    /* USER CODE BEGIN BusFault_IRQn 0 */
+  /* USER CODE BEGIN BusFault_IRQn 0 */
 
-    /* USER CODE END BusFault_IRQn 0 */
-    while (1)
-    {
-      /* USER CODE BEGIN W1_BusFault_IRQn 0 */
-      /* USER CODE END W1_BusFault_IRQn 0 */
-    }
+  /* USER CODE END BusFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_BusFault_IRQn 0 */
+    /* USER CODE END W1_BusFault_IRQn 0 */
+  }
 }
 
 /**
-    * @brief This function handles Undefined instruction or illegal state.
-    */
+  * @brief This function handles Undefined instruction or illegal state.
+  */
 void UsageFault_Handler(void)
 {
-    /* USER CODE BEGIN UsageFault_IRQn 0 */
+  /* USER CODE BEGIN UsageFault_IRQn 0 */
 
-    /* USER CODE END UsageFault_IRQn 0 */
-    while (1)
-    {
-      /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
-      /* USER CODE END W1_UsageFault_IRQn 0 */
-    }
+  /* USER CODE END UsageFault_IRQn 0 */
+  while (1)
+  {
+    /* USER CODE BEGIN W1_UsageFault_IRQn 0 */
+    /* USER CODE END W1_UsageFault_IRQn 0 */
+  }
 }
 
 /**
-    * @brief This function handles Debug monitor.
-    */
+  * @brief This function handles Debug monitor.
+  */
 void DebugMon_Handler(void)
 {
-    /* USER CODE BEGIN DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 0 */
 
-    /* USER CODE END DebugMonitor_IRQn 0 */
-    /* USER CODE BEGIN DebugMonitor_IRQn 1 */
+  /* USER CODE END DebugMonitor_IRQn 0 */
+  /* USER CODE BEGIN DebugMonitor_IRQn 1 */
 
-    /* USER CODE END DebugMonitor_IRQn 1 */
+  /* USER CODE END DebugMonitor_IRQn 1 */
 }
 
 /******************************************************************************/
-/* STM32F7xx Peripheral Interrupt Handlers                                      */
-/* Add here the Interrupt Handlers for the used peripherals.                    */
-/* For the available peripheral interrupt handler names,                        */
-/* please refer to the startup file (startup_stm32f7xx.s).                      */
+/* STM32F7xx Peripheral Interrupt Handlers                                    */
+/* Add here the Interrupt Handlers for the used peripherals.                  */
+/* For the available peripheral interrupt handler names,                      */
+/* please refer to the startup file (startup_stm32f7xx.s).                    */
 /******************************************************************************/
 
 /**
-    * @brief This function handles CAN1 RX0 interrupts.
-    */
+  * @brief This function handles CAN1 RX0 interrupts.
+  */
 void CAN1_RX0_IRQHandler(void)
 {
-    /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
+  /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
 
-    /* USER CODE END CAN1_RX0_IRQn 0 */
-    HAL_CAN_IRQHandler(&hcan1);
-    /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
+  /* USER CODE END CAN1_RX0_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
     
-    /* USER CODE END CAN1_RX0_IRQn 1 */
+  /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
 /**
-    * @brief This function handles USART3 global interrupt.
-    */
+  * @brief This function handles USART3 global interrupt.
+  */
 void USART3_IRQHandler(void)
 {
-    /* USER CODE BEGIN USART3_IRQn 0 */
+  /* USER CODE BEGIN USART3_IRQn 0 */
 	extern struct app_data app;
 
 	UART_HandleTypeDef *huart3 = app.board.cli.huart;
-    /* USER CODE END USART3_IRQn 0 */
-    HAL_UART_IRQHandler(huart3);
-    /* USER CODE BEGIN USART3_IRQn 1 */
+  /* USER CODE END USART3_IRQn 0 */
+  HAL_UART_IRQHandler(huart3);
+  /* USER CODE BEGIN USART3_IRQn 1 */
 
-    /* USER CODE END USART3_IRQn 1 */
+  /* USER CODE END USART3_IRQn 1 */
 }
 
 /**
-    * @brief This function handles TIM7 global interrupt.
-    */
+  * @brief This function handles TIM7 global interrupt.
+  */
 void TIM7_IRQHandler(void)
 {
-    /* USER CODE BEGIN TIM7_IRQn 0 */
+  /* USER CODE BEGIN TIM7_IRQn 0 */
 
-    /* USER CODE END TIM7_IRQn 0 */
-    HAL_TIM_IRQHandler(&htim7);
-    /* USER CODE BEGIN TIM7_IRQn 1 */
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
 
-    /* USER CODE END TIM7_IRQn 1 */
+  /* USER CODE END TIM7_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

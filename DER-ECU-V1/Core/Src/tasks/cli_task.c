@@ -43,7 +43,7 @@ command cmds[] =
 
 TaskHandle_t cli_task_start(struct app_data *data){
    TaskHandle_t handle;
-   xTaskCreate(cli_task_fn, "CLI task", 128, (void *)data, 10, &handle);
+   xTaskCreate(cli_task_fn, "CLI task", 512, (void *)data, 10, &handle);
    return handle;
 }
 
@@ -119,7 +119,15 @@ void get_brake(char *arg){
 }
 
 void get_time(char *arg){
-	cli_putline("time to get a watch");
+	read_time();
+	snprintf(line, 256, "RTC: %d/%d/%d %d:%d:%d",
+			ad->rtc_datetime.day,
+			ad->rtc_datetime.month,
+			ad->rtc_datetime.year,
+			ad->rtc_datetime.hour,
+			ad->rtc_datetime.minute,
+			ad->rtc_datetime.second);
+	cli_putline(line);
 }
 
 void get_faults(char *arg){

@@ -16,6 +16,7 @@
 
 #include "main.h"
 #include "board/board.h"
+#include "ext_drivers/rtc.h"
 
 #define PLAUSIBILITY_THRESH 10
 #define BRAKE_LIGHT_THRESH 5
@@ -64,6 +65,8 @@ struct app_data {
 
 	struct board board;
 
+	datetime rtc_datetime;
+
 	TaskHandle_t dev_task;
 	TaskHandle_t cli_task;
 	TaskHandle_t rtd_task;
@@ -77,3 +80,7 @@ struct app_data {
 void app_create();
 
 void cli_putline(char *line);
+
+void read_time();
+void write_time(datetime *new_datetime);
+

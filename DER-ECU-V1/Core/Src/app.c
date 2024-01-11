@@ -62,3 +62,33 @@ void cli_putline(char *line){
 	}
 }
 
+void read_time(){
+	RTC_TimeTypeDef rTime;
+	RTC_DateTypeDef rDate;
+
+	HAL_RTC_GetTime(&app.board.stm32f767.hrtc, &rTime, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&app.board.stm32f767.hrtc, &rDate, RTC_FORMAT_BIN);
+
+	app.rtc_datetime.second = rTime.Seconds;
+	app.rtc_datetime.minute = rTime.Minutes;
+	app.rtc_datetime.hour = rTime.Hours;
+	app.rtc_datetime.day = rDate.Date;
+	app.rtc_datetime.month = rDate.Month;
+	app.rtc_datetime.year = rDate.Year;
+}
+
+void write_time(datetime *new_datetime){
+	RTC_TimeTypeDef rTime;
+	RTC_DateTypeDef rDate;
+
+	rTime.Seconds = new_datetime->second;
+	rTime.Minutes = new_datetime->minute;
+	rTime.Hours = new_datetime->hour;
+	rDate.Date = new_datetime->day;
+	rDate.Month = new_datetime->month;
+	rDate.Year = new_datetime->year;
+
+	HAL_RTC_SetTime(&app.board.stm32f767.hrtc, &rTime, RTC_FORMAT_BCD);
+	HAL_RTC_SetDate(&app.board.stm32f767.hrtc, &rDate, RTC_FORMAT_BCD);
+}
+
