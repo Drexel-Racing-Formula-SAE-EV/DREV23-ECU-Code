@@ -13,11 +13,14 @@
 #include <stm32f7xx_hal.h>
 #include <stm32f7xx_hal_rtc.h>
 
+#define DEC2HEX(x) (10*(x / 16) + (x - 10*(x / 16)))
+#define HEX2DEC(x) (16*(x / 10) + (x % 10))
+
 typedef struct {
-	uint8_t year;
-	uint8_t month;
-	uint8_t day;
-	uint8_t hour;
-	uint8_t minute;
-	uint8_t second;
+	uint16_t year;
+	uint16_t month;
+	uint16_t day;
+	uint16_t hour;
+	uint16_t minute;
+	uint16_t second;
 } datetime;

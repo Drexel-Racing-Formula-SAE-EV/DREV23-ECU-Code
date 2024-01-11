@@ -27,6 +27,7 @@ void get_throttle(char *arg);
 void get_brakelight(char *arg);
 void get_brake(char *arg);
 void get_time(char *arg);
+void set_time(char *arg);
 void get_faults(char *arg);
 
 char line[256];
@@ -37,7 +38,8 @@ command cmds[] =
 	{"get throttle", &get_throttle, "get the throttle percentage"},
 	{"get brakelight", &get_brakelight, "get the brake light status"},
 	{"get brake", &get_brake, "get the brake percentage"},
-	{"get time", &get_time, "get the current time"},
+	{"get time", &get_time, "get the RTC"},
+	{"set time", &set_time, "set the RTC. format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM"},
 	{"get fault", &get_faults, "gets the faults of the system"}
 };
 
@@ -120,14 +122,49 @@ void get_brake(char *arg){
 
 void get_time(char *arg){
 	read_time();
-	snprintf(line, 256, "RTC: %d/%d/%d %d:%d:%d",
-			ad->rtc_datetime.day,
+	snprintf(line, 256, "RTC: %02d/%02d/%d-%02d:%02d:%02d",
 			ad->rtc_datetime.month,
+			ad->rtc_datetime.day,
 			ad->rtc_datetime.year,
 			ad->rtc_datetime.hour,
 			ad->rtc_datetime.minute,
 			ad->rtc_datetime.second);
 	cli_putline(line);
+}
+
+void set_time(char *arg){
+	int month, day, year, hour, minute, second;
+	int ret = sscanf(arg + 9, " %d/%d/%d-%d:%d:%d",
+			&month,
+			&day,
+			&year,
+			&hour,
+			&minute,
+			&second);
+
+	ad->rtc_datetime.month = month;
+	ad->rtc_datetime.day = day;
+	ad->rtc_datetime.year = year;
+	ad->rtc_datetime.hour = hour;
+	ad->rtc_datetime.minute = minute;
+	ad->rtc_datetime.second = second;
+
+	if(ret != 6){
+		cli_putline("ERROR: set time format not readable");
+		cli_putline("format: '1/2/24-17:38:50' for Jan. 2, 2024 at 5:38:50PM");
+	}else{
+		write_time();
+
+		snprintf(line, 256, "Set RTC: %02d/%02d/%d-%02d:%02d:%02d",
+				ad->rtc_datetime.month,
+				ad->rtc_datetime.day,
+				ad->rtc_datetime.year,
+				ad->rtc_datetime.hour,
+				ad->rtc_datetime.minute,
+				ad->rtc_datetime.second
+				);
+		cli_putline(line);
+	}
 }
 
 void get_faults(char *arg){

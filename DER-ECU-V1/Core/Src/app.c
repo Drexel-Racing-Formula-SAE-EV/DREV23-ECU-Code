@@ -39,6 +39,15 @@ void app_create() {
 	app.brakePercent = 0;
 
 	board_init(&app.board);
+
+	app.rtc_datetime.second = 0;
+	app.rtc_datetime.minute = 0;
+	app.rtc_datetime.hour = 0;
+	app.rtc_datetime.day = 1;
+	app.rtc_datetime.month = 1;
+	app.rtc_datetime.year = 24;
+	write_time();
+
 	HAL_UART_Receive_IT(app.board.cli.huart, &app.board.cli.c, 1);
 	//assert(app.dev_task = dev_task_start(&app));
 	assert(app.cli_task = cli_task_start(&app));
@@ -77,16 +86,16 @@ void read_time(){
 	app.rtc_datetime.year = rDate.Year;
 }
 
-void write_time(datetime *new_datetime){
+void write_time(){
 	RTC_TimeTypeDef rTime;
 	RTC_DateTypeDef rDate;
 
-	rTime.Seconds = new_datetime->second;
-	rTime.Minutes = new_datetime->minute;
-	rTime.Hours = new_datetime->hour;
-	rDate.Date = new_datetime->day;
-	rDate.Month = new_datetime->month;
-	rDate.Year = new_datetime->year;
+	rTime.Seconds = HEX2DEC(app.rtc_datetime.second);
+	rTime.Minutes = HEX2DEC(app.rtc_datetime.minute);
+	rTime.Hours = HEX2DEC(app.rtc_datetime.hour);
+	rDate.Date = HEX2DEC(app.rtc_datetime.day);
+	rDate.Month = HEX2DEC(app.rtc_datetime.month);
+	rDate.Year = HEX2DEC(app.rtc_datetime.year);
 
 	HAL_RTC_SetTime(&app.board.stm32f767.hrtc, &rTime, RTC_FORMAT_BCD);
 	HAL_RTC_SetDate(&app.board.stm32f767.hrtc, &rDate, RTC_FORMAT_BCD);

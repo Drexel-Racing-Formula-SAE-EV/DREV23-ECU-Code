@@ -82,5 +82,5 @@ void app_create();
 void cli_putline(char *line);
 
 void read_time();
-void write_time(datetime *new_datetime);
+void write_time();
 
