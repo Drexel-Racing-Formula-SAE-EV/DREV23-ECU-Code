@@ -487,8 +487,8 @@ void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
-  RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef sDate = {0};
+  //RTC_TimeTypeDef sTime = {0};
+  //RTC_DateTypeDef sDate = {0};
 
   /* USER CODE BEGIN RTC_Init 1 */
 
@@ -514,6 +514,7 @@ void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date
   */
+  /*
   sTime.Hours = 0x0;
   sTime.Minutes = 0x0;
   sTime.Seconds = 0x0;
@@ -532,6 +533,7 @@ void MX_RTC_Init(void)
   {
     Error_Handler();
   }
+*/
   /* USER CODE BEGIN RTC_Init 2 */
 
   /* USER CODE END RTC_Init 2 */

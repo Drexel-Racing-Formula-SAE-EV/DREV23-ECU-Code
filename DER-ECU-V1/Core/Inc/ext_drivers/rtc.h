@@ -9,6 +9,8 @@
  * 
  */
 
+#pragma once
+
 #include <stdint.h>
 #include <stm32f7xx_hal.h>
 #include <stm32f7xx_hal_rtc.h>

@@ -11,6 +11,7 @@
 
 #include "main.h"
 #include "tasks/error_task.h"
+#include "ext_drivers/rtc.h"
 
 /**
  * @brief Actual ERROR task function
@@ -47,6 +48,8 @@ void error_task_fn(void *arg) {
             data->softSystemFault = false;
             setRFE(1);
         }
+
+        HAL_RTCEx_BKUPWrite(&data->board.stm32f767.hrtc, RTC_BKP_DR1, 0x32F2);
 
         osDelayUntil(entryTicksCount + (1000 / ERROR_FREQ));
     }
